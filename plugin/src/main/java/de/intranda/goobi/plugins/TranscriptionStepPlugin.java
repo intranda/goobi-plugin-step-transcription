@@ -88,15 +88,9 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
 
         configuredImageFolder = pluginConfig.getString("imageFolder", "master");
         //        }
-        String imageFolder = null;
-        try {
-            imageFolder = step.getProzess().getConfiguredImageFolder(configuredImageFolder);
-        } catch (IOException | InterruptedException | SwapException | DAOException e) {
-            log.error(e);
-        }
 
         try {
-            initImageList(imageFolder);
+            initImageList(configuredImageFolder);
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             // TODO Auto-generated catch block
             log.error(e);
@@ -111,7 +105,14 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
      * @throws DAOException
      * @throws SwapException
      */
-    public void initImageList(String imageFolder) throws SwapException, DAOException, IOException, InterruptedException {
+    public void initImageList(String configuredImageFolder) throws SwapException, DAOException, IOException, InterruptedException {
+        String imageFolder = null;
+        try {
+            imageFolder = step.getProzess().getConfiguredImageFolder(configuredImageFolder);
+        } catch (IOException | InterruptedException | SwapException | DAOException e) {
+            log.error(e);
+        }
+
         images.clear();
         Path path = Paths.get(imageFolder);
         String ocrDir = step.getProzess().getOcrTxtDirectory();
@@ -119,7 +120,7 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
             List<Path> imageNameList = StorageProvider.getInstance().listFiles(imageFolder, NIOFileUtils.imageOrObjectNameFilter);
             int order = 1;
             for (Path imagePath : imageNameList) {
-                Image image = new Image(step.getProzess(), "master", imagePath.getFileName().toString(), order, 800);
+                Image image = new Image(step.getProzess(), configuredImageFolder, imagePath.getFileName().toString(), order, 800);
                 String basename = FilenameUtils.removeExtension(imagePath.getFileName().toString());
                 Path ocrFile = Paths.get(ocrDir, basename + ".txt");
                 String currentOcr = readOcrFile(ocrFile);
