@@ -58,24 +58,36 @@
     </ui:define>
 
     <ui:define name="content">
-
+        <link rel="stylesheet" href="plugins/step/intranda_step_transcription/css/style.css"></link>
         <h:form id="myform">
         
-        <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+        <script src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
         <script>
-           tinymce.init({
-        	         selector: '#ocrText'
-        	        	      });
+//         	$(document).on("ready", function() {
+        		console.log("initializing tinymce...")
+       			tinymce.init({
+    	        	selector: '.ocr-text', 
+    	        	menubar: '',
+    	        	plugins: 'autoresize'
+    	        });
+//         	});
         </script>
         
             <div class="box box-color lightgrey box-bordered">
                 <div class="box-title">
-                    <h3>
+                    <h2>
                         <i class="fa fa-puzzle-piece" />
                         <h:outputText id="id9a"
                             value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
-                    </h3>
+                    </h2>
                     <div class="actions">
+                        <h:commandLink id="id10a"
+                            onclick="save()"
+                            action="#{AktuelleSchritteForm.myPlugin.saveOcr}"
+                            styleClass="btn btn-mini">
+                            <f:ajax execute="hiddenInputs" render="" />
+                            <i class="fa fa-save" />
+                        </h:commandLink>
                         <h:commandLink id="id10"
                             action="#{NavigationForm.Reload}"
                             styleClass="btn btn-mini">
@@ -106,72 +118,36 @@
                 </div>
 
                 <div class="box-content">
-
-                    <h:panelGroup
-                        rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList gt 0}"
-                        class="#{'col-xs-12 col-sm-5'}"
-                        layout="block">
-                        <h:panelGroup id="bigimage">
-
-                            <!-- image -->
-                            <ui:fragment
-                                rendered="#{AktuelleSchritteForm.myPlugin.image.type == 'image'}">
-
-                                <div
-                                    class="row margin-top-most margin-bottom-most">
-                                    <div
-                                        class="#{'col-xs-12 col-sm-6'}">
-                                        <div class="div-image">
-                                            <div id="mainImage"
-                                                class="margin-bottom-regular">
-                                                <div
-                                                    id="ajaxloader_image">
-                                                    <img
-                                                        src="template/img/goobi/ajaxloader2.gif"
-                                                        aria-label="#{msgs.image}" />
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="big-image-caption margin-top-regular font-light">
-                                                <h:outputText
-                                                    value="#{AktuelleSchritteForm.myPlugin.image.imageName}" />
-                                            </div>
-
-                                        </div>
+                    <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.images}" varStatus="status">
+<!--                         <div class="row"> -->
+<!--                             <div class="col-md-12 transcription-row text-center"> -->
+<!--                                 <h3>#{image.imageName}</h3> -->
+<!--                             </div> -->
+<!--                         </div> -->
+                        <div class="row transcription-row">
+                            <div class="col-md-6">
+                                <div class="image-wrapper">
+                                    <div>
+                                        <h3>#{image.imageName}</h3>
+                                        <img class="transcription-image" title="#{image.image.tooltip}" src="#{image.image.thumbnailUrl}"></img>
                                     </div>
-                                    
-                                    <!-- OCR text -->
-                                    <ui:fragment
-                                        rendered="true">
-                                        <div
-                                            class="col-xs-12 col-sm-6 border-light">
-                                            <div id="ocrText"
-                                                class="ocr-text">
-                                                <h:outputText
-                                                    value="#{AktuelleSchritteForm.myPlugin.ocrText}"
-                                                    escape="false">
-                                                </h:outputText>
-                                            </div>
-                                        </div>
-                                    </ui:fragment>
-                                    <!--  OCR text -->
-                                    
                                 </div>
-                                <!-- // image -->
-                                
-<!--                                 <div class="row"> -->
-<!--                                     <f:subview id="second_image"> -->
-<!--                                         <ui:include -->
-<!--                                             src="ImageQAPlugin_include_imagenavigation.xhtml" /> -->
-<!--                                     </f:subview> -->
-<!--                                 </div> -->
-
-                            </ui:fragment>
-                        
-                        </h:panelGroup>
+                            </div> 
+                            <div class="col-md-6 transcription-editor-col">
+                                <textarea class="ocr-text" id="textarea_#{status.index}">
+                                    #{image.ocrText}
+                                </textarea>
+                            </div>                        
+                        </div>
+                    </ui:repeat>
+                    <h:panelGroup id="hiddenInputs" style="display: none;">
+                        <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.images}" varStatus="status">
+                            <h:inputText value="#{image.ocrText}" class="input_#{status.index}"></h:inputText>
+                        </ui:repeat>
                     </h:panelGroup>
+                    
                     <h:panelGroup layout="block"
-                        rendered="#{AktuelleSchritteForm.myPlugin.sizeOfImageList == 0}"
+                        rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"
                         styleClass="col-sm-12">
                         <h:outputText value="#{msgs.noImagesFound}" />
                     </h:panelGroup>
@@ -196,6 +172,29 @@
                 <!-- Save -->
                 <h:commandLink
                     styleClass="btn btn-lightgrey pull-right font-size-s"
+                    id="saveAndExit"
+                    onclick="save()"
+                    action="#{AktuelleSchritteForm.myPlugin.saveOcrAndExit}">
+                    <i class="fa fa-check margin-right-5"></i>
+                    <h:outputText value="#{msgs.plugin_replaceimages_saveAndExit}" />
+                    <x:updateActionListener
+                        property="#{NavigationForm.uiStatus.pluginSimulation}"
+                        value="#{false}" />
+                </h:commandLink>
+                <h:commandLink
+                    styleClass="btn btn-lightgrey pull-right font-size-s margin-right-5"
+                    id="save"
+                    onclick="save()"
+                    action="#{AktuelleSchritteForm.myPlugin.saveOcr}">
+                    <i class="fa fa-save margin-right-5"></i>
+                    <h:outputText value="#{msgs.save}" />
+                    <x:updateActionListener
+                        property="#{NavigationForm.uiStatus.pluginSimulation}"
+                        value="#{false}" />
+                    <f:ajax execute="hiddenInputs" render=""/>
+                </h:commandLink>
+                <h:commandLink
+                    styleClass="btn btn-lightgrey pull-right font-size-s margin-right-5"
                     id="absenden"
                     action="#{AktuelleSchritteForm.myPlugin.cancel}">
                     <i class="fa fa-close margin-right-5"></i>
@@ -204,8 +203,22 @@
                         property="#{NavigationForm.uiStatus.pluginSimulation}"
                         value="#{false}" />
                 </h:commandLink>
-
+                
             </div>
+            <script>
+            	function save() {
+            		var editors = tinymce.editors
+            		for(var i=0;i!=editors.length;i++) {
+            			var editor = editors[i];
+            			var textAreaID = editor.id;
+            			var content = editor.getContent();
+            			var inputID = "input_" + textAreaID.replace("textarea_", "");
+            			console.log(inputID)
+            			document.querySelector('.'+inputID).value = content;
+            		}
+            		return true;
+            	}
+            </script>
 
         </h:form>
 
