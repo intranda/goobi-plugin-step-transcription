@@ -13,4 +13,4 @@ public class TranscriptionImage {
     private Image image;
     private String ocrText;
     private Path ocrPath;
-}
+    }

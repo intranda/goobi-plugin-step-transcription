@@ -49,6 +49,7 @@ import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
@@ -67,9 +68,21 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     private String returnPath;
 
     @Getter
+    private Boolean pagesRTL = false;
+
+    @Getter
+    private int imageIndex = 0;
+
+    @Getter
+    private int sizeOfImageList = 0;
+
+    @Getter
     private List<TranscriptionImage> images = new ArrayList<>();
 
     private String configuredImageFolder;
+
+    @Getter
+    private TranscriptionImage image = null;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -128,6 +141,9 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
                 order++;
             }
         }
+
+        sizeOfImageList = images.size();
+        setImageIndex(0);
     }
 
     public String saveOcrAndExit() throws IOException {
@@ -139,7 +155,7 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         if (images.isEmpty()) {
             return;
         }
-        Files.createDirectories(images.get(0).getOcrPath().getParent());
+        Files.createDirectories(images.get(imageIndex).getOcrPath().getParent());
         for (TranscriptionImage image : images) {
             Files.write(image.getOcrPath(), Arrays.asList(image.getOcrText().split("\n")));
         }
@@ -159,6 +175,51 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
             }
         }
         return builder.toString();
+    }
+
+    public void setImageIndex(int i) {
+        this.imageIndex = i;
+        this.image = images.get(i);
+    }
+
+    public void setImageMoveTo(String page) {
+        try {
+            int pageNumber = Integer.parseInt(page);
+            if ((this.imageIndex != pageNumber - 1) && pageNumber > 0 && pageNumber <= getSizeOfImageList() + 1) {
+                setImageIndex(pageNumber - 1);
+            }
+        } catch (NumberFormatException e) {
+        }
+    }
+
+    public String getImageMoveTo() {
+        return this.imageIndex + 1 + "";
+    }
+
+    public String cmdMoveFirst() {
+        setImageIndex(0);
+        return "";
+    }
+
+    public String cmdMovePrevious() {
+        if (getImageIndex() != 0) {
+            setImageIndex(getImageIndex() - 1);
+        }
+        return "";
+    }
+
+    public String cmdMoveNext() {
+        if (getImageIndex() != images.size()-1) {
+            setImageIndex(getImageIndex() + 1);
+        }
+        return "";
+    }
+
+    public String cmdMoveLast() {
+        if (getImageIndex() != images.size()-1) {
+            setImageIndex(images.size()-1);
+        }
+        return "";
     }
 
     @Override

@@ -39,7 +39,9 @@
             <intranda:breadcrumb id="processAll"
                 label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.aktuelleProzesse:msgs.prozessvorlagen}"
                 action="process_all" navId="a1" />
-            <intranda:breadcrumb id="processEdit" label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.prozessDetails:msgs.process_templateDetails}" action="process_edit" />
+            <intranda:breadcrumb id="processEdit"
+                label="#{ProzessverwaltungForm.modusAnzeige=='aktuell'?msgs.prozessDetails:msgs.process_templateDetails}"
+                action="process_edit" />
         </c:if>
 
         <c:if test="#{NavigationForm.uiStatus.pluginSimulation != true}">
@@ -58,21 +60,24 @@
     </ui:define>
 
     <ui:define name="content">
-        <link rel="stylesheet" href="plugins/step/intranda_step_transcription/css/style.css"></link>
+        <link rel="stylesheet"
+            href="plugins/step/intranda_step_transcription/css/style.css"></link>
         <h:form id="myform">
-        
-        <script src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
-        <script>
-//         	$(document).on("ready", function() {
-        		console.log("initializing tinymce...")
-       			tinymce.init({
-    	        	selector: '.ocr-text', 
-    	        	menubar: '',
-    	        	plugins: 'autoresize'
-    	        });
-//         	});
-        </script>
-        
+
+            <script
+                src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
+            <script>
+													//         	$(document).on("ready", function() {
+													console
+															.log("initializing tinymce...")
+													tinymce.init({
+														selector : '.ocr-text',
+														menubar : '',
+														plugins : 'autoresize'
+													});
+													//         	});
+												</script>
+
             <div class="box box-color lightgrey box-bordered">
                 <div class="box-title">
                     <h2>
@@ -81,8 +86,7 @@
                             value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
                     </h2>
                     <div class="actions">
-                        <h:commandLink id="id10a"
-                            onclick="save()"
+                        <h:commandLink id="id10a" onclick="save()"
                             action="#{AktuelleSchritteForm.myPlugin.saveOcr}"
                             styleClass="btn btn-mini">
                             <f:ajax execute="hiddenInputs" render="" />
@@ -118,34 +122,52 @@
                 </div>
 
                 <div class="box-content">
-                    <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.images}" varStatus="status">
-<!--                         <div class="row"> -->
-<!--                             <div class="col-md-12 transcription-row text-center"> -->
-<!--                                 <h3>#{image.imageName}</h3> -->
-<!--                             </div> -->
-<!--                         </div> -->
-                        <div class="row transcription-row">
-                            <div class="col-md-6">
-                                <div class="image-wrapper">
-                                    <div>
-                                        <h3>#{image.imageName}</h3>
-                                        <img class="transcription-image" title="#{image.image.tooltip}" src="#{image.image.thumbnailUrl}"></img>
-                                    </div>
+
+
+                    <!--                     <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.images}" varStatus="status"> -->
+                    <!--                         <div class="row"> -->
+                    <!--                             <div class="col-md-12 transcription-row text-center"> -->
+                    <!--                                 <h3>#{image.imageName}</h3> -->
+                    <!--                             </div> -->
+                    <!--                         </div> -->
+                    <div class="row transcription-row">
+
+                        <f:subview id="first_image">
+                            <ui:include
+                                src="TranscriptionPlugin_include_imagenavigation.xhtml" />
+                        </f:subview>
+                        <!--                         <ui:fragment -->
+                        <!--                             rendered="true"> -->
+                        <!--                             <ui:include -->
+                        <!--                                 src="TranscriptionPlugin_include_imageControls.xhtml" /> -->
+                        <!--                         </ui:fragment> -->
+
+                        <div class="col-md-6">
+                            <div class="image-wrapper">
+                                <div>
+                                    <h3>#{AktuelleSchritteForm.myPlugin.image.imageName}</h3>
+                                    <img class="transcription-image"
+                                        title="#{AktuelleSchritteForm.myPlugin.image.image.tooltip}"
+                                        src="#{AktuelleSchritteForm.myPlugin.image.image.thumbnailUrl}"></img>
                                 </div>
-                            </div> 
-                            <div class="col-md-6 transcription-editor-col">
-                                <textarea class="ocr-text" id="textarea_#{status.index}">
-                                    #{image.ocrText}
-                                </textarea>
-                            </div>                        
+                            </div>
                         </div>
-                    </ui:repeat>
-                    <h:panelGroup id="hiddenInputs" style="display: none;">
-                        <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.images}" varStatus="status">
-                            <h:inputText value="#{image.ocrText}" class="input_#{status.index}"></h:inputText>
-                        </ui:repeat>
+                        <div class="col-md-6 transcription-editor-col">
+                            <textarea class="ocr-text" id="textarea_0">
+                                    #{AktuelleSchritteForm.myPlugin.image.ocrText}
+                                </textarea>
+                        </div>
+                    </div>
+                    <!--                     </ui:repeat> -->
+
+
+                    <h:panelGroup id="hiddenInputs"
+                        style="display: none;">
+                        <h:inputText
+                            value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
+                            class="input_0"></h:inputText>
                     </h:panelGroup>
-                    
+
                     <h:panelGroup layout="block"
                         rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"
                         styleClass="col-sm-12">
@@ -172,26 +194,25 @@
                 <!-- Save -->
                 <h:commandLink
                     styleClass="btn btn-lightgrey pull-right font-size-s"
-                    id="saveAndExit"
-                    onclick="save()"
+                    id="saveAndExit" onclick="save()"
                     action="#{AktuelleSchritteForm.myPlugin.saveOcrAndExit}">
                     <i class="fa fa-check margin-right-5"></i>
-                    <h:outputText value="#{msgs.plugin_replaceimages_saveAndExit}" />
+                    <h:outputText
+                        value="#{msgs.plugin_replaceimages_saveAndExit}" />
                     <x:updateActionListener
                         property="#{NavigationForm.uiStatus.pluginSimulation}"
                         value="#{false}" />
                 </h:commandLink>
                 <h:commandLink
                     styleClass="btn btn-lightgrey pull-right font-size-s margin-right-5"
-                    id="save"
-                    onclick="save()"
+                    id="save" onclick="save()"
                     action="#{AktuelleSchritteForm.myPlugin.saveOcr}">
                     <i class="fa fa-save margin-right-5"></i>
                     <h:outputText value="#{msgs.save}" />
                     <x:updateActionListener
                         property="#{NavigationForm.uiStatus.pluginSimulation}"
                         value="#{false}" />
-                    <f:ajax execute="hiddenInputs" render=""/>
+                    <f:ajax execute="hiddenInputs" render="" />
                 </h:commandLink>
                 <h:commandLink
                     styleClass="btn btn-lightgrey pull-right font-size-s margin-right-5"
@@ -203,22 +224,29 @@
                         property="#{NavigationForm.uiStatus.pluginSimulation}"
                         value="#{false}" />
                 </h:commandLink>
-                
+
             </div>
             <script>
-            	function save() {
-            		var editors = tinymce.editors
-            		for(var i=0;i!=editors.length;i++) {
-            			var editor = editors[i];
-            			var textAreaID = editor.id;
-            			var content = editor.getContent();
-            			var inputID = "input_" + textAreaID.replace("textarea_", "");
-            			console.log(inputID)
-            			document.querySelector('.'+inputID).value = content;
-            		}
-            		return true;
-            	}
-            </script>
+													function save() {
+														var editors = tinymce.editors
+														for (var i = 0; i != editors.length; i++) {
+															var editor = editors[i];
+															var textAreaID = editor.id;
+															var content = editor
+																	.getContent();
+															var inputID = "input_0"
+																			.replace(
+																					"textarea_",
+																					"");
+															console
+																	.log(inputID)
+															document
+																	.querySelector('.'
+																			+ inputID).value = content;
+														}
+														return true;
+													}
+												</script>
 
         </h:form>
 
