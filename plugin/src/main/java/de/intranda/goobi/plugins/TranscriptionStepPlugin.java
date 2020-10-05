@@ -83,7 +83,17 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
 
     @Getter
     private TranscriptionImage image = null;
-
+    @Getter
+    private boolean useTiles = false;
+    @Getter
+    private boolean useTilesFullscreen = false;
+    @Getter
+    private List<String> rotationCommandLeft = null;
+    @Getter
+    private List<String> rotationCommandRight = null;
+    @Getter
+    private List<String> deletionCommand = null;
+    
     @Override
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
