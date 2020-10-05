@@ -136,13 +136,14 @@
                             <ui:include
                                 src="TranscriptionPlugin_include_imagenavigation.xhtml" />
                         </f:subview>
-                        <!--                         <ui:fragment -->
-                        <!--                             rendered="true"> -->
-                        <!--                             <ui:include -->
-                        <!--                                 src="TranscriptionPlugin_include_imageControls.xhtml" /> -->
-                        <!--                         </ui:fragment> -->
 
                         <div class="col-md-6">
+
+                            <ui:fragment rendered="true">
+                                <ui:include
+                                    src="TranscriptionPlugin_include_imageControls.xhtml" />
+                            </ui:fragment>
+
                             <div class="image-wrapper">
                                 <div>
                                     <h3>#{AktuelleSchritteForm.myPlugin.image.imageName}</h3>
@@ -235,9 +236,9 @@
 															var content = editor
 																	.getContent();
 															var inputID = "input_0"
-																			.replace(
-																					"textarea_",
-																					"");
+																	.replace(
+																			"textarea_",
+																			"");
 															console
 																	.log(inputID)
 															document

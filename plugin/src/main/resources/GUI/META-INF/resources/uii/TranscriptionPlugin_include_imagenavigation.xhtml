@@ -31,7 +31,7 @@
 					styleClass="btn font-size-s margin-right-10" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}">
 					<i class="fa fa-double-angle-left"></i>
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/> -->
 				</h:commandLink>
 					
 				<h:commandLink 
@@ -41,7 +41,7 @@
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}">
 					<i class="fa fa-angle-left"></i>
 					<h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" />
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/> -->
 				</h:commandLink>
 				<div class="margin-sides-10">
                 
@@ -65,7 +65,7 @@
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}">
 					<h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage} " />
 					<i class="fa fa-angle-right"></i>
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources" />
+<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources" /> -->
 				</h:commandLink>
 						
 				<h:commandLink 
@@ -73,7 +73,7 @@
 					styleClass="btn font-size-s margin-sides-10" 
 					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
 					<i class="fa fa-double-angle-right"></i>
-					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/>
+<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/> -->
 				</h:commandLink>
 				
 		</div>
