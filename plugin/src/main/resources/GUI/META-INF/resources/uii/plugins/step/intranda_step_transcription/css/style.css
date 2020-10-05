@@ -1,0 +1,17 @@
+.transcription-row {
+	margin-bottom: 20px;
+}
+
+.transcription-image {
+	max-height: 90vh;
+	max-width: 100%;
+}
+
+.image-wrapper {
+	display: flex;
+	justify-content: center;
+}
+
+.transcription-editor-col {
+	padding-top: 55px;
+}

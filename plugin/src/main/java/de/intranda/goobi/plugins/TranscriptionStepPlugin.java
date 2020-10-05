@@ -1,11 +1,13 @@
 package de.intranda.goobi.plugins;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 
 /**
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.io.FilenameUtils;
 import org.goobi.beans.Step;
@@ -46,7 +49,6 @@ import de.sub.goobi.helper.exceptions.DAOException;
 import de.sub.goobi.helper.exceptions.SwapException;
 import de.sub.goobi.metadaten.Image;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
@@ -64,24 +66,10 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     private boolean allowTaskFinishButtons;
     private String returnPath;
 
-    private String imageFolderName = "";
-
-    private List<Image> allImages = new ArrayList<>();
-
     @Getter
-    @Setter
-    private Image image = null;
+    private List<TranscriptionImage> images = new ArrayList<>();
 
-    @Getter
-    @Setter
-    private String ocrText = "";
-
-    private String selectedImageFolder;
-
-    private int THUMBNAIL_SIZE_IN_PIXEL = 1500;
-    private int imageIndex;
-
-
+    private String configuredImageFolder;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -89,166 +77,93 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         this.step = step;
 
         // read parameters from correct block in configuration file
-        SubnodeConfiguration myconfig = ConfigPlugins.getProjectAndStepConfig(title, step);
-//        value = myconfig.getString("value", "default value");
-        allowTaskFinishButtons = myconfig.getBoolean("allowTaskFinishButtons", false);
+        SubnodeConfiguration pluginConfig = ConfigPlugins.getProjectAndStepConfig(title, step);
+        allowTaskFinishButtons = pluginConfig.getBoolean("allowTaskFinishButtons", false);
         log.info("Transcription step plugin initialized");
 
         //        possibleImageFolder = Arrays.asList(myconfig.getStringArray("foldername"));
         //        if (!possibleImageFolder.isEmpty()) {
         //            selectedImageFolder = possibleImageFolder.get(0);
         //        } else {
-        selectedImageFolder = "master";
+
+        configuredImageFolder = pluginConfig.getString("imageFolder", "master");
         //        }
-        String imageFolder = null;
+
         try {
-            imageFolder = step.getProzess().getConfiguredImageFolder(selectedImageFolder);
-        } catch (IOException | InterruptedException | SwapException | DAOException e) {
+            initImageList(configuredImageFolder);
+        } catch (SwapException | DAOException | IOException | InterruptedException e) {
+            // TODO Auto-generated catch block
             log.error(e);
         }
-
-        initImageList(imageFolder);
-
-        //TESTING
-        try {
-            test();
-        } catch (IOException | SwapException | DAOException | InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    private void test() throws IOException, SwapException, DAOException, InterruptedException {
-       
-        getOCR(image.getImageName());
-        
-        String[] lines = ocrText.split("\r\n|\r|\n");
-        int iLines =   lines.length +1;
-        
-        ocrText = ocrText.concat(System.lineSeparator() + "New transcription line test " +  iLines);
-        
-        setOCR(image.getImageName());
     }
 
     /**
      * @param myconfig
      * @param imageFolder
-     */
-    public void initImageList(String imageFolder) {
-        this.imageFolderName = imageFolder;
-        allImages.clear();
-        Path path = Paths.get(imageFolderName);
-        //        List<NamePart> nameParts = initImageNameParts(myconfig);
-        if (StorageProvider.getInstance().isFileExists(path)) {
-            List<String> imageNameList = StorageProvider.getInstance().list(imageFolderName, NIOFileUtils.imageOrObjectNameFilter);
-            int order = 1;
-            for (String imagename : imageNameList) {
-                Image currentImage;
-//                Path imagePath = Paths.get(imageFolderName, imagename);
-                try {
-                    currentImage = new Image(getStep().getProzess(), imageFolderName, imagename, order, THUMBNAIL_SIZE_IN_PIXEL);
-                    //                    currentImage = new SelectableImage(imagePath, order, THUMBNAIL_SIZE_IN_PIXEL);
-                    //                    currentImage.initNameParts(nameParts);
-                    allImages.add(currentImage);
-                    order++;
-                } catch (IOException | InterruptedException | SwapException | DAOException e) {
-                    log.error("Error initializing image " + imagename, e);
-                }
-            }
-            setImageIndex(0);
-        }
-    }
-
-    /**
-     * 
-     * Adjusts the variable imageIndex by the passed int, ensureing it does not go out of bounds in the process if displaOCR is set it also updates
-     * the OCRtext
-     * 
-     */
-    public void setImageIndex(int imageIndex) {
-        this.imageIndex = imageIndex;
-        if (this.imageIndex < 0) {
-            this.imageIndex = 0;
-        }
-        if (this.imageIndex >= getSizeOfImageList()) {
-            this.imageIndex = getSizeOfImageList() - 1;
-        }
-        if (this.imageIndex >= 0) {
-            image = allImages.get(this.imageIndex);
-        }
-
-        getOCR(image.getImageName());
-    }
-
-    public int getSizeOfImageList() {
-        return allImages.size();
-    }
-
-    /**
-     * 
-     * tries to retrieve OCR text for current image and puts it in ocrText
-     * 
-     */
-    public void getOCR(String imageFile) {
-
-        ocrText = "";
-        
-        if (image != null) {
-           String filename = FilenameUtils.removeExtension(imageFile);    
-            ocrText = FilesystemHelper.getOcrFileContent(step.getProzess(), filename);
-        }
-    }
-
-    /**
-     * 
-     * Reads ocrText and saves to the current image's ocr file
-     * 
-     * @throws IOException
      * @throws InterruptedException
+     * @throws IOException
      * @throws DAOException
      * @throws SwapException
-     * 
      */
-    public void setOCR(String imageFile) throws IOException, SwapException, DAOException, InterruptedException {
-
-        StorageProviderInterface sp = StorageProvider.getInstance();
-        String ocrDir = step.getProzess().getOcrTxtDirectory();
-
-        if (!imageFile.isEmpty()) {
-
-            Path pathOCR = Paths.get(ocrDir);
-            //create dir if not already there
-            if (!sp.isFileExists(pathOCR)) {
-                sp.createDirectories(pathOCR);
-            }
-           
-           String filename = FilenameUtils.removeExtension(imageFile);
-            Path txtPath = Paths.get(ocrDir, filename + ".txt");
-
-            PrintWriter out = null;
-            try {
-                out = new PrintWriter(txtPath.toString());
-                out.println(ocrText);
-            } finally {
-                out.close();
-            }
-
-//            if (!FilesystemHelper.isOcrFileExists(step.getProzess(), filename)) {
-//                Path txtPath = Paths.get(ocrDir, filename + ".txt");
-//                if (!sp.isFileExists(txtPath)) {
-//                    sp.createFile(txtPath);
-//                }
-//            }
-//            ocrText = FilesystemHelper.getOcrFileContent(step.getProzess(), filename);
+    public void initImageList(String configuredImageFolder) throws SwapException, DAOException, IOException, InterruptedException {
+        String imageFolder = null;
+        try {
+            imageFolder = step.getProzess().getConfiguredImageFolder(configuredImageFolder);
+        } catch (IOException | InterruptedException | SwapException | DAOException e) {
+            log.error(e);
         }
+
+        images.clear();
+        Path path = Paths.get(imageFolder);
+        String ocrDir = step.getProzess().getOcrTxtDirectory();
+        if (StorageProvider.getInstance().isFileExists(path)) {
+            List<Path> imageNameList = StorageProvider.getInstance().listFiles(imageFolder, NIOFileUtils.imageOrObjectNameFilter);
+            int order = 1;
+            for (Path imagePath : imageNameList) {
+                Image image = new Image(step.getProzess(), configuredImageFolder, imagePath.getFileName().toString(), order, 800);
+                String basename = FilenameUtils.removeExtension(imagePath.getFileName().toString());
+                Path ocrFile = Paths.get(ocrDir, basename + ".txt");
+                String currentOcr = readOcrFile(ocrFile);
+                images.add(new TranscriptionImage(imagePath.getFileName().toString(), image, currentOcr, ocrFile));
+                order++;
+            }
+        }
+    }
+
+    public String saveOcrAndExit() throws IOException {
+        saveOcr();
+        return finish();
+    }
+
+    public void saveOcr() throws IOException {
+        if (images.isEmpty()) {
+            return;
+        }
+        Files.createDirectories(images.get(0).getOcrPath().getParent());
+        for (TranscriptionImage image : images) {
+            Files.write(image.getOcrPath(), Arrays.asList(image.getOcrText().split("\n")));
+        }
+    }
+
+    public String readOcrFile(Path ocrFile) throws IOException {
+        if (!Files.exists(ocrFile)) {
+            return "";
+        }
+        StorageProviderInterface sp = StorageProvider.getInstance();
+        StringBuilder builder = new StringBuilder();
+        String buffer = null;
+        String encoding = FilesystemHelper.getFileEncoding(ocrFile);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(sp.newInputStream(ocrFile), encoding))) {
+            while ((buffer = in.readLine()) != null) {
+                builder.append(buffer.replaceAll("(\\s+)", " ")).append("<br/>");
+            }
+        }
+        return builder.toString();
     }
 
     @Override
     public PluginGuiType getPluginGuiType() {
         return PluginGuiType.FULL;
-        // return PluginGuiType.PART;
-        // return PluginGuiType.PART_AND_FULL;
-        // return PluginGuiType.NONE;
     }
 
     @Override
