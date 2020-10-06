@@ -81,7 +81,15 @@
 													tinymce.init({
 														selector : '.ocr-text',
 														menubar : '',
-														plugins : 'autoresize'
+														plugins : 'autoresize', 
+														init_instance_callback: function (editor) {
+															    editor.on('blur', function (e) {
+															    	console.log('Editor was blurred!');
+															    	save();
+															    	console.log('After save');
+															    });
+															  }
+
 													});
 													//         	});
 												</script>

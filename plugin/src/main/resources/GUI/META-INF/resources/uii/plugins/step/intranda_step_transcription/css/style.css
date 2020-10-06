@@ -15,3 +15,24 @@
 .transcription-editor-col {
 	padding-top: 55px;
 }
+
+#zoomSliderLabel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 100px;
+    background: transparent;
+    border: none;
+}
+
+#zoomSliderLabel input {
+    border: none;
+    background-color: transparent;
+    width: 60px;
+    text-align: right;
+}
+
+#zoomSliderLabel input:focus {
+    background-color: white;
+    color: #666;
+}
