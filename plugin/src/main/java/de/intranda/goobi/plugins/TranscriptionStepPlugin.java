@@ -104,11 +104,6 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         allowTaskFinishButtons = pluginConfig.getBoolean("allowTaskFinishButtons", false);
         log.info("Transcription step plugin initialized");
 
-        //        possibleImageFolder = Arrays.asList(myconfig.getStringArray("foldername"));
-        //        if (!possibleImageFolder.isEmpty()) {
-        //            selectedImageFolder = possibleImageFolder.get(0);
-        //        } else {
-
         configuredImageFolder = pluginConfig.getString("imageFolder", "master");
         //        }
 

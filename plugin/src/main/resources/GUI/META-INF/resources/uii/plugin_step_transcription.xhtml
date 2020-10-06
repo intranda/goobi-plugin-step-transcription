@@ -84,9 +84,7 @@
 														plugins : 'autoresize', 
 														init_instance_callback: function (editor) {
 															    editor.on('blur', function (e) {
-															    	console.log('Editor was blurred!');
 															    	save();
-															    	console.log('After save');
 															    });
 															  }
 
@@ -139,13 +137,6 @@
 
                 <div class="box-content">
 
-
-                    <!--                     <ui:repeat var="image" value="#{AktuelleSchritteForm.myPlugin.images}" varStatus="status"> -->
-                    <!--                         <div class="row"> -->
-                    <!--                             <div class="col-md-12 transcription-row text-center"> -->
-                    <!--                                 <h3>#{image.imageName}</h3> -->
-                    <!--                             </div> -->
-                    <!--                         </div> -->
                     <div class="row transcription-row">
 
                         <f:subview id="first_image">
