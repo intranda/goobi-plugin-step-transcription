@@ -2,18 +2,18 @@
 	margin-bottom: 20px;
 }
 
-.transcription-image {
-	max-height: 90vh;
-	width: 100%;
+.transcription-image-wrapper {
+	width: 60%;
 }
 
 .image-wrapper {
 	display: flex;
 	justify-content: center;
+	padding-top: 20px;
 }
 
 .transcription-editor-col {
-	padding-top: 55px;
+	padding-top: 20px;
 }
 
 #zoomSliderLabel {

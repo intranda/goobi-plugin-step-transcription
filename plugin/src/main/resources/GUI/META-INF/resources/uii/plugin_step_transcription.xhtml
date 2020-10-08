@@ -75,22 +75,19 @@
             <script
                 src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
             <script>
-													//         	$(document).on("ready", function() {
-													console
-															.log("initializing tinymce...")
-													tinymce.init({
-														selector : '.ocr-text',
-														menubar : '',
-														plugins : 'autoresize', 
-														init_instance_callback: function (editor) {
-															    editor.on('blur', function (e) {
-															    	save();
-															    });
-															  }
+            	var vh = vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+				tinymce.init({
+					selector : '.ocr-text',
+					menubar : '',
+					height : 0.8*vh, 
+					init_instance_callback: function (editor) {
+						    editor.on('blur', function (e) {
+						    	save();
+						    });
+						  }
 
-													});
-													//         	});
-												</script>
+				});
+			</script>
 
             <div class="box box-color lightgrey box-bordered">
                 <div class="box-title">
@@ -145,16 +142,9 @@
                         </f:subview>
 
                         <div class="col-md-6">
-
-                            <ui:fragment rendered="true">
-                                <ui:include
-                                    src="TranscriptionPlugin_include_imageControls.xhtml" />
-                            </ui:fragment>
-
                             <div class="image-wrapper">
-                                <div>
-                                    <h3>#{AktuelleSchritteForm.myPlugin.image.imageName}</h3>
-                                    <div id="mainImage" class="transcription-image">
+                                <div class="transcription-image-wrapper">
+                                    <div id="bigImage" class="transcription-image">
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +226,7 @@
             <script>
             var configViewer = {
                     global: {
-                        divId: 'mainImage',
+                        divId: 'bigImage',
                         useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
                         footerHeight: 0,
                         adaptContainerHeight: true,
@@ -250,45 +240,37 @@
                     }
                 };                                               
                 
-                    var viewImage = new ImageView.Image( configViewer );
-                    viewImage.load()
-                    .then(function(image) {
-                        image.onFirstTileLoaded()
-                        .then(function() {                                                  
-                            $('#ajaxloader_image').fadeOut(800);
-                        })
-                        .catch(function() {
-                            $('#ajaxloader_image').fadeOut(800);
-                        })
-                    })
-                    .catch(function(error){
-                        console.error( 'Error opening image', error );
+                var viewImage = new ImageView.Image( configViewer );
+                viewImage.load()
+                .then(function(image) {
+                    image.onFirstTileLoaded()
+                    .then(function() {                                                  
                         $('#ajaxloader_image').fadeOut(800);
-                        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-                    });
-                
-                
+                    })
+                    .catch(function() {
+                        $('#ajaxloader_image').fadeOut(800);
+                    })
+                })
+                .catch(function(error){
+                    console.error( 'Error opening image', error );
+                    $('#ajaxloader_image').fadeOut(800);
+                    $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+                });
             
-													function save() {
-														var editors = tinymce.editors
-														for (var i = 0; i != editors.length; i++) {
-															var editor = editors[i];
-															var textAreaID = editor.id;
-															var content = editor
-																	.getContent();
-															var inputID = "input_0"
-																	.replace(
-																			"textarea_",
-																			"");
-															console
-																	.log(inputID)
-															document
-																	.querySelector('.'
-																			+ inputID).value = content;
-														}
-														return true;
-													}
-												</script>
+            
+        
+				function save() {
+					var editors = tinymce.editors
+					for (var i = 0; i != editors.length; i++) {
+						var editor = editors[i];
+						var textAreaID = editor.id;
+						var content = editor.getContent();
+						var inputID = "input_0".replace("textarea_", "");
+						document.querySelector('.' + inputID).value = content;
+					}
+					return true;
+				}
+			</script>
 
         </h:form>
 
