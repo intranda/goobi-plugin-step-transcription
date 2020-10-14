@@ -76,9 +76,12 @@
                 src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
             <script>
             	var vh = vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-				tinymce.init({
+				var mytiny = tinymce.init({
+					plugins: 'paste',
 					selector : '.ocr-text',
 					menubar : '',
+					toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alighnblock | indent outdent | pastetext',
+					paste_as_text: true,
 					height : 0.8*vh, 
 					init_instance_callback: function (editor) {
 						    editor.on('blur', function (e) {
@@ -87,6 +90,9 @@
 						  }
 
 				});
+				mytiny.then(mt => {
+					console.log(mt)
+				})
 			</script>
 
             <div class="box box-color lightgrey box-bordered">
