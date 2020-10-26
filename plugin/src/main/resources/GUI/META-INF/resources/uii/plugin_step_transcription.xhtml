@@ -140,43 +140,60 @@
                 </div>
 
                 <div class="box-content">
-
-                    <div class="row transcription-row">
-
-                        <f:subview id="first_image">
-                            <ui:include
-                                src="TranscriptionPlugin_include_imagenavigation.xhtml" />
-                        </f:subview>
-
-                        <div class="col-md-6">
-                            <div class="image-wrapper">
-                                <div class="transcription-image-wrapper">
-                                    <div id="bigImage" class="transcription-image">
+                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.altoFolderFound and not AktuelleSchritteForm.myPlugin.ignoreAltoFolder}">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                <div class="alert alert-warning">
+                                  <h:outputText escape="false" value="#{msgs.plugin_transcription_warning_alto}" />
+                                </div>
+                                <p>#{msgs.plugin_transcription_warning_alto_text1}</p>
+                                <p>#{msgs.plugin_transcription_warning_alto_text2}</p>
+                                <h:commandLink styleClass="btn">
+                                    #{msgs.ignore}
+                                    <f:setPropertyActionListener value="true" target="#{AktuelleSchritteForm.myPlugin.ignoreAltoFolder}"></f:setPropertyActionListener>
+                                </h:commandLink>
+                                <h:commandLink styleClass="btn btn-danger pull-right" action="#{AktuelleSchritteForm.myPlugin.deleteAltoFolder}">#{msgs.plugin_transcription_deleteAltoFolder}</h:commandLink>
+                            </div>
+                        </div>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.ignoreAltoFolder or not AktuelleSchritteForm.myPlugin.altoFolderFound}">
+                        <div class="row transcription-row">
+    
+                            <f:subview id="first_image">
+                                <ui:include
+                                    src="TranscriptionPlugin_include_imagenavigation.xhtml" />
+                            </f:subview>
+    
+                            <div class="col-md-6">
+                                <div class="image-wrapper">
+                                    <div class="transcription-image-wrapper">
+                                        <div id="bigImage" class="transcription-image">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6 transcription-editor-col">
+                                <textarea class="ocr-text" id="textarea_0">
+                                        #{AktuelleSchritteForm.myPlugin.image.ocrText}
+                                    </textarea>
+                            </div>
                         </div>
-                        <div class="col-md-6 transcription-editor-col">
-                            <textarea class="ocr-text" id="textarea_0">
-                                    #{AktuelleSchritteForm.myPlugin.image.ocrText}
-                                </textarea>
-                        </div>
-                    </div>
-                    <!--                     </ui:repeat> -->
-
-
-                    <h:panelGroup id="hiddenInputs"
-                        style="display: none;">
-                        <h:inputText
-                            value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
-                            class="input_0"></h:inputText>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="block"
-                        rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"
-                        styleClass="col-sm-12">
-                        <h:outputText value="#{msgs.noImagesFound}" />
-                    </h:panelGroup>
+                        <!--                     </ui:repeat> -->
+    
+    
+                        <h:panelGroup id="hiddenInputs"
+                            style="display: none;">
+                            <h:inputText
+                                value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
+                                class="input_0"></h:inputText>
+                        </h:panelGroup>
+    
+                        <h:panelGroup layout="block"
+                            rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"
+                            styleClass="col-sm-12">
+                            <h:outputText value="#{msgs.noImagesFound}" />
+                        </h:panelGroup>
+                    </ui:fragment>
                 </div>
             </div>
 

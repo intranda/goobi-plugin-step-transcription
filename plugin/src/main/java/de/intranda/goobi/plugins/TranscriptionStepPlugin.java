@@ -95,7 +95,12 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     private List<String> rotationCommandRight = null;
     @Getter
     private List<String> deletionCommand = null;
-    
+    @Getter
+    private boolean altoFolderFound;
+    @Getter
+    @Setter
+    private boolean ignoreAltoFolder;
+
     @Override
     public void initialize(Step step, String returnPath) {
         this.returnPath = returnPath;
@@ -110,6 +115,11 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         //        }
 
         try {
+            StorageProviderInterface storageProvider = StorageProvider.getInstance();
+            String altoDir = step.getProzess().getOcrAltoDirectory();
+            if (storageProvider.isDirectory(Paths.get(altoDir)) && storageProvider.list(altoDir).size() > 0) {
+                this.altoFolderFound = true;
+            }
             initImageList(configuredImageFolder);
         } catch (SwapException | DAOException | IOException | InterruptedException e) {
             // TODO Auto-generated catch block
@@ -132,12 +142,12 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         } catch (IOException | InterruptedException | SwapException | DAOException e) {
             log.error(e);
         }
-
+        StorageProviderInterface storageProvider = StorageProvider.getInstance();
         images.clear();
         Path path = Paths.get(imageFolder);
         String ocrDir = step.getProzess().getOcrTxtDirectory();
         if (StorageProvider.getInstance().isFileExists(path)) {
-            List<Path> imageNameList = StorageProvider.getInstance().listFiles(imageFolder, NIOFileUtils.imageOrObjectNameFilter);
+            List<Path> imageNameList = storageProvider.listFiles(imageFolder, NIOFileUtils.imageOrObjectNameFilter);
             int order = 1;
             for (Path imagePath : imageNameList) {
                 Image image = new Image(step.getProzess(), configuredImageFolder, imagePath.getFileName().toString(), order, 800);
@@ -151,6 +161,12 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
 
         sizeOfImageList = images.size();
         setImageIndex(0);
+    }
+
+    public void deleteAltoFolder() throws SwapException, DAOException, IOException, InterruptedException {
+        String altoDir = step.getProzess().getOcrAltoDirectory();
+        StorageProvider.getInstance().deleteDir(Paths.get(altoDir));
+        this.altoFolderFound = false;
     }
 
     public String saveOcrAndExit() throws IOException {
@@ -222,15 +238,15 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     }
 
     public String cmdMoveNext() {
-        if (getImageIndex() != images.size()-1) {
+        if (getImageIndex() != images.size() - 1) {
             setImageIndex(getImageIndex() + 1);
         }
         return "";
     }
 
     public String cmdMoveLast() {
-        if (getImageIndex() != images.size()-1) {
-            setImageIndex(images.size()-1);
+        if (getImageIndex() != images.size() - 1) {
+            setImageIndex(images.size() - 1);
         }
         return "";
     }
