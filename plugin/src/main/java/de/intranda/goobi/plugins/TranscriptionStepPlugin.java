@@ -34,6 +34,7 @@ import java.util.List;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.io.FilenameUtils;
 import org.goobi.beans.Step;
+import org.goobi.managedbeans.StepBean;
 import org.goobi.production.enums.PluginGuiType;
 import org.goobi.production.enums.PluginReturnValue;
 import org.goobi.production.enums.PluginType;
@@ -42,6 +43,7 @@ import org.goobi.production.plugin.interfaces.IStepPluginVersion2;
 
 import de.sub.goobi.config.ConfigPlugins;
 import de.sub.goobi.helper.FilesystemHelper;
+import de.sub.goobi.helper.Helper;
 import de.sub.goobi.helper.NIOFileUtils;
 import de.sub.goobi.helper.StorageProvider;
 import de.sub.goobi.helper.StorageProviderInterface;
@@ -164,6 +166,12 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         for (TranscriptionImage image : images) {
             Files.write(image.getOcrPath(), Arrays.asList(image.getOcrText().split("\n")));
         }
+    }
+
+    public String saveAndCloseStep() throws IOException {
+        this.saveOcr();
+        StepBean stepBean = (StepBean) Helper.getManagedBeanValue("#{AktuelleSchritteForm}");
+        return stepBean.SchrittDurchBenutzerAbschliessen();
     }
 
     public String readOcrFile(Path ocrFile) throws IOException {

@@ -105,6 +105,7 @@
                     <div class="actions">
                         <h:commandLink id="id10a" onclick="save()"
                             action="#{AktuelleSchritteForm.myPlugin.saveOcr}"
+                            title="#{msgs.save}"
                             styleClass="btn btn-mini">
                             <f:ajax execute="hiddenInputs" render="" />
                             <i class="fa fa-save" />
@@ -114,8 +115,8 @@
                             styleClass="btn btn-mini">
                             <i class="fa fa-refresh" />
                         </h:commandLink>
-                        <h:commandLink id="id11"
-                            action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}"
+                        <h:commandLink id="id11" onclick="save()"
+                            action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}"
                             styleClass="btn btn-mini"
                             rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                             title="#{msgs.task_leavePluginAndFinishTask}">
@@ -185,7 +186,7 @@
                 <h:commandLink styleClass="btn btn-green font-size-s"
                     id="finishAndClose"
                     rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
-                    action="#{AktuelleSchritteForm.SchrittDurchBenutzerAbschliessen}">
+                    action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}">
                     <i class="fa fa-check margin-right-5"></i>
                     <h:outputText
                         value="#{msgs.task_leavePluginAndFinishTask}" />
@@ -195,17 +196,6 @@
                 </h:commandLink>
 
                 <!-- Save -->
-                <h:commandLink
-                    styleClass="btn btn-lightgrey pull-right font-size-s"
-                    id="saveAndExit" onclick="save()"
-                    action="#{AktuelleSchritteForm.myPlugin.saveOcrAndExit}">
-                    <i class="fa fa-check margin-right-5"></i>
-                    <h:outputText
-                        value="#{msgs.plugin_replaceimages_saveAndExit}" />
-                    <x:updateActionListener
-                        property="#{NavigationForm.uiStatus.pluginSimulation}"
-                        value="#{false}" />
-                </h:commandLink>
                 <h:commandLink
                     styleClass="btn btn-lightgrey pull-right font-size-s margin-right-5"
                     id="save" onclick="save()"
