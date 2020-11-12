@@ -145,16 +145,19 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         StorageProviderInterface storageProvider = StorageProvider.getInstance();
         images.clear();
         Path path = Paths.get(imageFolder);
-        String ocrDir = step.getProzess().getOcrTxtDirectory();
+        String ocrTxtDir = step.getProzess().getOcrTxtDirectory();
+        String ocrAltoDir = step.getProzess().getOcrAltoDirectory();
         if (StorageProvider.getInstance().isFileExists(path)) {
             List<Path> imageNameList = storageProvider.listFiles(imageFolder, NIOFileUtils.imageOrObjectNameFilter);
             int order = 1;
             for (Path imagePath : imageNameList) {
                 Image image = new Image(step.getProzess(), configuredImageFolder, imagePath.getFileName().toString(), order, 800);
                 String basename = FilenameUtils.removeExtension(imagePath.getFileName().toString());
-                Path ocrFile = Paths.get(ocrDir, basename + ".txt");
+                Path ocrFile = Paths.get(ocrTxtDir, basename + ".txt");
+                Path altoPath = Paths.get(ocrAltoDir, basename + ".xml");
+                boolean hasAlto = Files.exists(altoPath);
                 String currentOcr = readOcrFile(ocrFile);
-                images.add(new TranscriptionImage(imagePath.getFileName().toString(), image, currentOcr, ocrFile));
+                images.add(new TranscriptionImage(imagePath.getFileName().toString(), image, currentOcr, ocrFile, hasAlto, altoPath));
                 order++;
             }
         }
@@ -163,9 +166,17 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         setImageIndex(0);
     }
 
+    public void deleteSingleAltoResult() throws IOException {
+        Files.deleteIfExists(image.getAltoPath());
+        image.setHasAlto(false);
+    }
+
     public void deleteAltoFolder() throws SwapException, DAOException, IOException, InterruptedException {
         String altoDir = step.getProzess().getOcrAltoDirectory();
         StorageProvider.getInstance().deleteDir(Paths.get(altoDir));
+        for (TranscriptionImage image : this.images) {
+            image.setHasAlto(false);
+        }
         this.altoFolderFound = false;
     }
 

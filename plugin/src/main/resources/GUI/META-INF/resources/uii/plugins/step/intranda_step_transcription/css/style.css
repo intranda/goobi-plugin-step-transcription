@@ -36,3 +36,12 @@
     background-color: white;
     color: #666;
 }
+
+.blocker {
+	display: flex;
+}
+
+.blocker .alert {
+	flex-grow: 1;
+	margin-right: 10px;
+}

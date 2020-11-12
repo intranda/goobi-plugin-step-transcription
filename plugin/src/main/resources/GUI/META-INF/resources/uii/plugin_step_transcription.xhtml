@@ -173,9 +173,19 @@
                                 </div>
                             </div>
                             <div class="col-md-6 transcription-editor-col">
+                                <h:panelGroup styleClass="blocker" rendered="#{AktuelleSchritteForm.myPlugin.image.hasAlto}">
+                                    <div class="alert alert-warning">
+                                      <h:outputText escape="false" value="#{msgs.plugin_transcription_warning_single_alto}" />
+                                    </div>
+                                        <div>
+                                      <h:commandLink styleClass="btn btn-danger pull-right" action="#{AktuelleSchritteForm.myPlugin.deleteSingleAltoResult}">
+                                        #{msgs.plugin_transcription_deleteSingleAltoResult}
+                                        </h:commandLink>
+                                      </div>
+                                </h:panelGroup>
                                 <textarea class="ocr-text" id="textarea_0">
-                                        #{AktuelleSchritteForm.myPlugin.image.ocrText}
-                                    </textarea>
+                                    #{AktuelleSchritteForm.myPlugin.image.ocrText}
+                                </textarea>
                             </div>
                         </div>
                         <!--                     </ui:repeat> -->
