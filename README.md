@@ -2,7 +2,7 @@
 
 <img src="https://goobi.io/wp-content/uploads/logo_goobi_plugin.png" align="right" style="margin:0 0 20px 20px;" alt="Plugin for Goobi workflow" width="175" height="109">
 
-This is a step Plugin for Goobi workflow to allow the simple transcription of fulltexts per page without word coordinates.
+This is a step Plugin for Goobi workflow to allow the simple transcription of the content of each single page. Please notice that this plugin does not allow assigning coordinates to words or characters.
 
 More information about Goobi workflow is available under https://goobi.io. If you want to get in touch with the user community simply go to https://community.goobi.io.
 
