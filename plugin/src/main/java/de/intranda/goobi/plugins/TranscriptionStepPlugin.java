@@ -64,8 +64,6 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     @Getter
     private Step step;
     @Getter
-    private String value;
-    @Getter
     private boolean allowTaskFinishButtons;
     private String returnPath;
 

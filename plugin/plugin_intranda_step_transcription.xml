@@ -12,8 +12,8 @@
         <project>*</project>
         <step>*</step>
         
-        <!-- sample parameter -->
-        <value>testing</value>
+        <!-- which folder to use (master|main|jpeg|source|...) -->
+		<imageFolder>master</imageFolder>
         
         <!-- display button to finish the task directly from within the entered plugin -->
         <allowTaskFinishButtons>true</allowTaskFinishButtons>

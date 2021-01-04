@@ -2,21 +2,23 @@
 
 <img src="https://goobi.io/wp-content/uploads/logo_goobi_plugin.png" align="right" style="margin:0 0 20px 20px;" alt="Plugin for Goobi workflow" width="175" height="109">
 
-This is a plugin for Goobi workflow, the open source workflow tracking software for digitisation projects. More information about Goobi workflow is available under https://goobi.io. If you want to get in touch with the user community simply go to https://community.goobi.io.
+This is a step Plugin for Goobi workflow to allow the simple transcription of fulltexts per page without word coordinates.
+
+More information about Goobi workflow is available under https://goobi.io. If you want to get in touch with the user community simply go to https://community.goobi.io.
 
 ## Plugin details
 
 More information about the functionality of this plugin and the complete documentation can be found in the central documentation area at https://docs.intranda.com
 
-This is a simple step plugin which displays the pages of a document singly, together with their OCR text, if available. The text may be edited, or newly written, and saved to the document. 
+This is a simple step plugin which displays the pages of a document singly, together with their OCR text, if available. The text may be edited, or newly written, and saved to the document.
 
 Detail | Description
 --- | ---
 **Plugin identifier**       | intranda_step_transcription
 **Plugin type**             | Step plugin
 **Licence**                 | GPL 2.0 or newer    
-**Documentation (German)**  | - no documentation available -
-**Documentation (English)** | - no documentation available -
+**Documentation (German)**  | https://docs.goobi.io/goobi-workflow-plugins-de/step/intranda_step_transcription
+**Documentation (English)** | https://docs.goobi.io/goobi-workflow-plugins-en/step/intranda_step_transcription
 
 ## Goobi details
 
