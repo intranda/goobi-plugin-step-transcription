@@ -195,7 +195,7 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
 
     public String saveAndCloseStep() throws IOException {
         this.saveOcr();
-        StepBean stepBean = (StepBean) Helper.getManagedBeanValue("#{AktuelleSchritteForm}");
+        StepBean stepBean = (StepBean) Helper.getBeanByName("AktuelleSchritteForm", StepBean.class);
         return stepBean.SchrittDurchBenutzerAbschliessen();
     }
 
