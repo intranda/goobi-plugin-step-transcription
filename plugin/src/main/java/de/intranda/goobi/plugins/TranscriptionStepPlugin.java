@@ -109,6 +109,7 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         allowTaskFinishButtons = pluginConfig.getBoolean("allowTaskFinishButtons", false);
         log.info("Transcription step plugin initialized");
 
+        useTiles = pluginConfig.getBoolean("useTiles", true);
         configuredImageFolder = pluginConfig.getString("imageFolder", "master");
         //        }
 

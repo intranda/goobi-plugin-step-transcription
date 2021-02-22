@@ -3,8 +3,14 @@
 }
 
 .transcription-image-wrapper {
-	width: 60%;
+	width: 100%;
+	border: 1px solid #ccc;
 }
+
+.transcription-image {
+	height: 90vh;
+}
+
 
 .image-wrapper {
 	display: flex;

@@ -15,6 +15,9 @@
         <!-- which folder to use (master|main|jpeg|source|...) -->
 		<imageFolder>master</imageFolder>
         
+        <!-- use tiles in image view -->
+        <useTiles>true</useTiles>
+        
         <!-- display button to finish the task directly from within the entered plugin -->
         <allowTaskFinishButtons>true</allowTaskFinishButtons>
     </config>

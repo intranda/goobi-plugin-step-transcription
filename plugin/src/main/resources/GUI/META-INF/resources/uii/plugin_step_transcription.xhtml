@@ -76,12 +76,12 @@
                 src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
             <script>
 				var mytiny = tinymce.init({
-					plugins: 'paste',
+					plugins: 'paste table',
 					selector : '.ocr-text',
 					menubar : '',
-					toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alighnblock | indent outdent | pastetext',
+					toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alighnblock | indent outdent | table | pastetext',
 					paste_as_text: true,
-					height : "80vh", 
+					height : "90vh", 
 					init_instance_callback: function (editor) {
 						    editor.on('blur', function (e) {
 						    	save();
@@ -251,7 +251,7 @@
                         divId: 'bigImage',
                         useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
                         footerHeight: 0,
-                        adaptContainerHeight: true,
+                        adaptContainerHeight: false,
                         zoomSlider: "#zoomSlider",
                         zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
                         zoomSliderLabel: "#zoomSliderLabel input"
