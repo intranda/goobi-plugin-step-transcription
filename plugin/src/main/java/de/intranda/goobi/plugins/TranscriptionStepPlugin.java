@@ -138,7 +138,7 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         String imageFolder = null;
         try {
             imageFolder = step.getProzess().getConfiguredImageFolder(configuredImageFolder);
-        } catch (IOException | InterruptedException | SwapException | DAOException e) {
+        } catch (IOException | SwapException | DAOException e) {
             log.error(e);
         }
         StorageProviderInterface storageProvider = StorageProvider.getInstance();
