@@ -34,6 +34,7 @@ import java.util.List;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.io.FilenameUtils;
 import org.goobi.beans.Step;
+import org.goobi.io.BackupFileManager;
 import org.goobi.managedbeans.StepBean;
 import org.goobi.production.enums.PluginGuiType;
 import org.goobi.production.enums.PluginReturnValue;
@@ -95,9 +96,6 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     private List<String> deletionCommand = null;
     @Getter
     private boolean altoFolderFound;
-    @Getter
-    @Setter
-    private boolean ignoreAltoFolder;
 
     @Override
     public void initialize(Step step, String returnPath) {
@@ -145,7 +143,6 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         images.clear();
         Path path = Paths.get(imageFolder);
         String ocrTxtDir = step.getProzess().getOcrTxtDirectory();
-        String ocrAltoDir = step.getProzess().getOcrAltoDirectory();
         if (StorageProvider.getInstance().isFileExists(path)) {
             List<Path> imageNameList = storageProvider.listFiles(imageFolder, NIOFileUtils.imageOrObjectNameFilter);
             int order = 1;
@@ -153,10 +150,8 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
                 Image image = new Image(step.getProzess(), configuredImageFolder, imagePath.getFileName().toString(), order, 800);
                 String basename = FilenameUtils.removeExtension(imagePath.getFileName().toString());
                 Path ocrFile = Paths.get(ocrTxtDir, basename + ".txt");
-                Path altoPath = Paths.get(ocrAltoDir, basename + ".xml");
-                boolean hasAlto = Files.exists(altoPath);
                 String currentOcr = readOcrFile(ocrFile);
-                images.add(new TranscriptionImage(imagePath.getFileName().toString(), image, currentOcr, ocrFile, hasAlto, altoPath));
+                images.add(new TranscriptionImage(imagePath.getFileName().toString(), image, currentOcr, ocrFile));
                 order++;
             }
         }
@@ -166,18 +161,30 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         this.setImageToIndex();
     }
 
-    public void deleteSingleAltoResult() throws IOException {
-        Files.deleteIfExists(image.getAltoPath());
-        image.setHasAlto(false);
-    }
-
-    public void deleteAltoFolder() throws SwapException, DAOException, IOException, InterruptedException {
-        String altoDir = step.getProzess().getOcrAltoDirectory();
-        StorageProvider.getInstance().deleteDir(Paths.get(altoDir));
-        for (TranscriptionImage image : this.images) {
-            image.setHasAlto(false);
+    public void backupAlto() {
+        if (!this.isAltoFolderFound()) {
+            return;
         }
-        this.altoFolderFound = false;
+        try {
+            StorageProviderInterface sp = StorageProvider.getInstance();
+            Path ocrFolder = Path.of(step.getProzess().getOcrDirectory());
+            if (sp.isFileExists(ocrFolder)) {
+                Path backupPath = Paths.get(ocrFolder.getParent().toString(), BackupFileManager.generateBackupName(ocrFolder.getFileName().toString()));
+                sp.copyDirectory(ocrFolder, backupPath);
+                String directoryToKeep = step.getProzess().getOcrTxtDirectory();
+                if (directoryToKeep.endsWith("/")) {
+                    directoryToKeep = directoryToKeep.substring(0, directoryToKeep.length() - 1);
+                }
+                for (Path dir : sp.listFiles(ocrFolder.toString())) {
+                    if (!dir.toString().equals(directoryToKeep)) {
+                        sp.deleteDir(dir);
+                    }
+                }
+            }
+            this.altoFolderFound = false;
+        } catch (IOException | SwapException e) {
+            log.error("Error backing up Alto results", e);
+        }
     }
 
     public String saveOcrAndExit() throws IOException {
