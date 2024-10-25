@@ -1,88 +1,112 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:composite="http://xmlns.jcp.org/jsf/composite"
-	xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core" 
-	xmlns:x="http://myfaces.apache.org/tomahawk">
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:x="http://myfaces.apache.org/tomahawk"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<composite:interface>
 	</composite:interface>
 
 	<composite:implementation>
 		<!-- navigation for big image -->
-		<div class="pull-center image-navigation">
-				<h:commandLink 
-					action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
-					styleClass="btn font-size-s margin-right-10" 
-					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}">
-					<i class="fa fa-double-angle-left"></i>
-<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/> -->
-				</h:commandLink>
-					
-				<h:commandLink 
-                    onclick="preventDoubleSubmit(this)"
-					action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}"
-					id="imageBack" 
-					styleClass="btn btn-primary font-size-s" 
-					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}">
-					<i class="fa fa-angle-left"></i>
-					<h:outputText value=" #{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}" />
-<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/> -->
-				</h:commandLink>
-				<div class="margin-sides-10">
-                
-                <x:outputText id="txtImageMoveTo1"
-                    value="#{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
-                    onclick="document.getElementById(this.id).nextSibling.style.display='inline';
-                    document.getElementById(this.id).style.display='none';  
-                    document.getElementById(this.id).nextSibling.focus(); 
-                    document.getElementById(this.id).nextSibling.select();" /> 
-<!--                 Seite direkt anspringen -->
-                <x:inputText value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}" style="display:none;font-size:9px;width:30px"
-                    required="true" id="txtImageMoveTo2"
-                    onblur="document.getElementById(this.id).style.display='none';document.getElementById(this.id).previousSibling.style.display='inline';"
-                    onkeypress="clickOnEnter(event, '.hidden-set-image-button')" />
-                <x:commandButton action="#{NavigationForm.Reload}" value="go" style="display:none" />
-				</div>
-				<h:commandLink 
-                    onclick="preventDoubleSubmit(this)"
-					action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
-					id="imageNext" 
-					styleClass="btn btn-primary font-size-s" 
-					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage}">
+		<div class="dataTables__paginator justify-content-center">
+			<button
+				class="btn btn-blank"
+				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
+				disabled="#{cc.attrs.paginator.getHasPreviousPage()}"
+				title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}"
+				data-bs-toggle="tooltip">
+				<span
+					aria-hidden="true"
+					class="fa fa-angle-double-left"/>
+				<f:ajax render="@form"/>
+			</button>
+			<button
+				class="btn btn-primary-400"
+				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}"
+				jsf:id="imageBack">
+				<span
+					aria-hidden="true"
+					class="fa fa-angle-left" />
+				<span>
+					<h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_nextImage:msgs.lw_previousImage}"/>
+				</span>
+				<f:ajax render="@form"/>
+			</button>
+			<div class="dataTables__paginator__page-count">
+				<h:outputText
+					id="txtMoveTo1"
+					forceId="false"
+                    value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
+                    onclick="document.querySelector('[id$=txtMoveTo2]').style.display='inline';
+			       			document.querySelector('[id$=txtMoveTo1]').style.display='none';
+							document.querySelector('[id$=txtMoveTo2]').focus();
+							document.querySelector('[id$=txtMoveTo2]').select();"/>
+				<h:inputText
+					id="txtMoveTo2"
+					forceId="false"
+					value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}"
+					style="display:none;width:30px"
+					required="true"
+					onblur="document.querySelector('[id$=txtMoveTo2]').style.display='none';document.querySelector('[id$=txtMoveTo1]').style.display='inline';"
+					onkeypress="return submitEnter(document.querySelector('[id$=cmdMoveTo]').id,event)"/>
+				<x:commandButton
+					action="#{NavigationForm.Reload}"
+					id="cmdMoveTo"
+					forceId="false"
+					value="go"
+					style="display:none">
+				</x:commandButton>
+			</div>
+			<button
+				class="btn btn-primary-400"
+				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
+				jsf:id="imageNext">
+				<span>
 					<h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage} " />
-					<i class="fa fa-angle-right"></i>
-<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources" /> -->
-				</h:commandLink>
-						
-				<h:commandLink 
-					action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}"
-					styleClass="btn font-size-s margin-sides-10" 
-					title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
-					<i class="fa fa-double-angle-right"></i>
-<!-- 					<f:ajax execute="@form" render="@form :qaform:bigimage" onevent="freeJSResources"/> -->
-				</h:commandLink>
-                
-                <h:commandLink style="display:none;" class="hidden-set-image-button"  action="#{AktuelleSchritteForm.myPlugin.setImageToIndex}"/>
-				
+				</span>
+				<span
+					aria-hidden="true"
+					class="fa fa-angle-right" />
+				<f:ajax render="@form"/>
+			</button>
+			<button
+				class="btn btn-blank"
+				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}"
+				jsf:id="navlast"
+				title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
+				<span
+					aria-hidden="true"
+					class="fa fa-angle-double-right"/>
+				<f:ajax render="@form"/>
+			</button>
+
+			<h:commandLink style="display:none;" class="hidden-set-image-button"  action="#{AktuelleSchritteForm.myPlugin.setImageToIndex}"/>
+
 		</div>
 		<!-- // navigation for big image -->
-        
+
         <script>
         	function clickOnEnter(event, selector) {
         		console.log(selector);
@@ -95,5 +119,3 @@
 
 	</composite:implementation>
 </ui:composition>
-
-
