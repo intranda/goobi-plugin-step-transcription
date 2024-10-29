@@ -1,33 +1,36 @@
-<!-- 
+<!--
  * This file is part of a plugin for Goobi - a Workflow tool for the support of mass digitization.
- * 
- * Visit the websites for more information. 
+ *
+ * Visit the websites for more information.
  *          - https://goobi.io
  *          - https://www.intranda.com
  *          - https://github.com/intranda/goobi
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59
  * Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  -->
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:o="http://omnifaces.org/ui"
     xmlns:of="http://omnifaces.org/functions"
-    template="/uii/template/template.html"
-    xmlns:x="http://myfaces.apache.org/tomahawk"
-    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites">
+    template="/uii/templatePG/templatePG.html"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:intranda="http://xmlns.jcp.org/jsf/composite/compositesPG"
+    xmlns:section="http://goobi.io/section">
 
-    <ui:param name="myPageTitle"
+    <ui:param
+        name="myPageTitle"
         value="#{msgs.plugin}: #{msgs[('plugin_').concat(AktuelleSchritteForm.myPlugin.title)]}" />
 
     <ui:define name="breadcrumb">
@@ -62,7 +65,6 @@
     <ui:define name="content">
         <link rel="stylesheet"
             href="plugins/step/intranda_step_transcription/css/style.css"></link>
-        <h:form id="myform">
 
 
             <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
@@ -71,17 +73,17 @@
             <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
             <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
             <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
-            
+
             <script
                 src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
             <script>
-				var mytiny = tinymce.init({
+				let mytiny = tinymce.init({
 					plugins: 'paste table',
 					selector : '.ocr-text',
 					menubar : '',
 					toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alighnblock | indent outdent | table | pastetext | forecolor backcolor',
 					paste_as_text: true,
-					height : "90vh", 
+					height : "90vh",
 					init_instance_callback: function (editor) {
 						    editor.on('blur', function (e) {
 						    	save();
@@ -94,51 +96,65 @@
 				})
 			</script>
 
-            <div class="box box-color lightgrey box-bordered">
-                <div class="box-title">
-                    <h2>
-                        <i class="fa fa-puzzle-piece" />
-                        <h:outputText id="id9a"
-                            value="#{AktuelleSchritteForm.myPlugin.step.titel}" />
-                    </h2>
-                    <div class="actions">
-                        <h:commandLink id="id10a" onclick="save()"
+            <section:section type="neutral">
+                <section:header
+                    icon="puzzle-piece"
+                    title="#{AktuelleSchritteForm.myPlugin.step.titel}">
+                    <section:header-actions>
+                        <h:commandLink
+                            id="id10"
+                            action="#{NavigationForm.Reload}"
+                            styleClass="btn d-flex align-items-center btn--title-action"
+                            pt:data-bs-toggle="tooltip">
+                            <span
+                                aria-hidden="true"
+                                class="fa fa-refresh" />
+                        </h:commandLink>
+                        <h:commandLink
+                            id="id10a"
+                            onclick="save()"
                             action="#{AktuelleSchritteForm.myPlugin.saveOcr}"
                             title="#{msgs.save}"
-                            styleClass="btn btn-mini">
+                            styleClass="btn d-flex align-items-center btn--title-action"
+                            pt:data-bs-toggle="tooltip">
                             <f:ajax execute="hiddenInputs" render="" />
-                            <i class="fa fa-save" />
+                            <span
+                                aria-hidden="true"
+                                class="fa fa-save" />
                         </h:commandLink>
-                        <h:commandLink id="id10"
-                            action="#{NavigationForm.Reload}"
-                            styleClass="btn btn-mini">
-                            <i class="fa fa-refresh" />
-                        </h:commandLink>
-                        <h:commandLink id="id11" onclick="save()"
+                        <h:commandLink
+                            id="id11"
+                            onclick="save()"
                             action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}"
-                            styleClass="btn btn-mini"
+                            styleClass="btn d-flex align-items-center btn--title-action"
                             rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
-                            title="#{msgs.task_leavePluginAndFinishTask}">
-                            <i class="fa fa-check" />
-                            <x:updateActionListener
-                                property="#{NavigationForm.uiStatus.pluginSimulation}"
+                            title="#{msgs.task_leavePluginAndFinishTask}"
+                            pt:data-bs-toggle="tooltip">
+                            <span
+                                aria-hidden="true"
+                                class="fa fa-check" />
+                            <f:setPropertyActionListener
+                                target="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />
                         </h:commandLink>
-
-                        <h:commandLink id="id12"
+                        <h:commandLink
+                            id="id12"
                             action="#{AktuelleSchritteForm.myPlugin.cancel}"
-                            styleClass="btn btn-mini"
+                            styleClass="btn d-flex align-items-center btn--title-action"
                             rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
-                            title="#{msgs.pluginLeave}">
-                            <i class="fa fa-close" />
-                            <x:updateActionListener
-                                property="#{NavigationForm.uiStatus.pluginSimulation}"
+                            title="#{msgs.pluginLeave}"
+                            pt:data-bs-toggle="tooltip">
+                            <span
+                                aria-hidden="true"
+                                class="fa fa-close" />
+                            <f:setPropertyActionListener
+                                target="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />
                         </h:commandLink>
-                    </div>
-                </div>
-
-                <div class="box-content">
+                    </section:header-actions>
+                </section:header>
+                <section:body padding="true">
+                    <h:form id="myform">
                     <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.altoFolderFound}">
                         <div class="row">
                             <div class="col-md-6 col-md-offset-3">
@@ -147,18 +163,23 @@
                                 </div>
                                 <p>#{msgs.plugin_transcription_warning_alto_text1}</p>
                                 <p>#{msgs.plugin_transcription_warning_alto_text2}</p>
-                                <h:commandLink styleClass="btn btn-success pull-right" action="#{AktuelleSchritteForm.myPlugin.backupAlto}">#{msgs.plugin_transcription_overwriteExistingOCR}</h:commandLink>
+                                <h:commandLink styleClass="btn btn-success" action="#{AktuelleSchritteForm.myPlugin.backupAlto}">#{msgs.plugin_transcription_overwriteExistingOCR}</h:commandLink>
                             </div>
                         </div>
                     </ui:fragment>
                     <ui:fragment rendered="#{not AktuelleSchritteForm.myPlugin.altoFolderFound}">
                         <div class="row transcription-row">
-    
-                            <f:subview id="first_image">
-                                <ui:include
-                                    src="TranscriptionPlugin_include_imagenavigation.xhtml" />
-                            </f:subview>
-    
+
+                            <div class="row">
+                                <div class="col">
+                                    <f:subview id="first_image">
+                                        <ui:include
+                                            src="TranscriptionPlugin_include_imagenavigation.xhtml" />
+                                    </f:subview>
+                                </div>
+                                <div class="col" />
+                            </div>
+
                             <div class="col-md-6">
                                 <div class="image-wrapper">
                                     <div class="transcription-image-wrapper">
@@ -174,65 +195,76 @@
                             </div>
                         </div>
                         <!--                     </ui:repeat> -->
-    
-    
+
+
                         <h:panelGroup id="hiddenInputs"
                             style="display: none;">
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
                                 class="input_0"></h:inputText>
                         </h:panelGroup>
-    
+
                         <h:panelGroup layout="block"
                             rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"
                             styleClass="col-sm-12">
                             <h:outputText value="#{msgs.noImagesFound}" />
                         </h:panelGroup>
                     </ui:fragment>
-                </div>
-            </div>
+                    </h:form>
+                </section:body>
+                <section:footer>
+                    <h:commandLink
+                        styleClass="btn btn-blank"
+                        id="absenden"
+                        action="#{AktuelleSchritteForm.myPlugin.cancel}">
+                        <span
+                            aria-hidden="true"
+                            class="fa fa-close" />
+                        <span>
+                            <h:outputText value="#{msgs.pluginLeave}" />
+                        </span>
+                        <f:setPropertyActionListener
+                            target="#{NavigationForm.uiStatus.pluginSimulation}"
+                            value="#{false}" />
+                    </h:commandLink>
+                    <!-- Save -->
+                    <h:commandLink
+                        styleClass="btn btn-blank"
+                        id="save" onclick="save()"
+                        action="#{AktuelleSchritteForm.myPlugin.saveOcr}">
+                        <span
+                            aria-hidden="true"
+                            class="fa fa-save" />
+                        <span>
+                            <h:outputText value="#{msgs.save}" />
+                        </span>
+                        <f:setPropertyActionListener
+                            target="#{NavigationForm.uiStatus.pluginSimulation}"
+                            value="#{false}" />
+                        <f:ajax execute="hiddenInputs" render="" />
+                    </h:commandLink>
+                    <!-- Save and finish the task -->
+                    <h:commandLink
+                        styleClass="btn btn-success"
+                        id="finishAndClose"
+                        rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
+                        action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}">
+                        <span
+                            aria-hidden="true"
+                            class="fa fa-check" />
+                        <span>
+                            <h:outputText
+                                value="#{msgs.task_leavePluginAndFinishTask}" />
+                        </span>
+                        <f:setPropertyActionListener
+                            target="#{NavigationForm.uiStatus.pluginSimulation}"
+                            value="#{false}" />
+                    </h:commandLink>
+                </section:footer>
+            </section:section>
 
-            <div class="form-actions">
-
-                <!-- Save and finish the task -->
-                <h:commandLink styleClass="btn btn-green font-size-s"
-                    id="finishAndClose"
-                    rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
-                    action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}">
-                    <i class="fa fa-check margin-right-5"></i>
-                    <h:outputText
-                        value="#{msgs.task_leavePluginAndFinishTask}" />
-                    <x:updateActionListener
-                        property="#{NavigationForm.uiStatus.pluginSimulation}"
-                        value="#{false}" />
-                </h:commandLink>
-
-                <!-- Save -->
-                <h:commandLink
-                    styleClass="btn btn-lightgrey pull-right font-size-s margin-right-5"
-                    id="save" onclick="save()"
-                    action="#{AktuelleSchritteForm.myPlugin.saveOcr}">
-                    <i class="fa fa-save margin-right-5"></i>
-                    <h:outputText value="#{msgs.save}" />
-                    <x:updateActionListener
-                        property="#{NavigationForm.uiStatus.pluginSimulation}"
-                        value="#{false}" />
-                    <f:ajax execute="hiddenInputs" render="" />
-                </h:commandLink>
-                <h:commandLink
-                    styleClass="btn btn-lightgrey pull-right font-size-s margin-right-5"
-                    id="absenden"
-                    action="#{AktuelleSchritteForm.myPlugin.cancel}">
-                    <i class="fa fa-close margin-right-5"></i>
-                    <h:outputText value="#{msgs.pluginLeave}" />
-                    <x:updateActionListener
-                        property="#{NavigationForm.uiStatus.pluginSimulation}"
-                        value="#{false}" />
-                </h:commandLink>
-
-            </div>
             <script>
-            var configViewer = {
+            let configViewer = {
                     global: {
                         divId: 'bigImage',
                         useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
@@ -246,13 +278,13 @@
                         mimeType: "image/jpeg",
                         tileSource: "#{AktuelleSchritteForm.myPlugin.image.image.url}"
                     }
-                };                                               
-                
-                var viewImage = new ImageView.Image( configViewer );
+                };
+
+                let viewImage = new ImageView.Image( configViewer );
                 viewImage.load()
                 .then(function(image) {
                     image.onFirstTileLoaded()
-                    .then(function() {                                                  
+                    .then(function() {
                         $('#ajaxloader_image').fadeOut(800);
                     })
                     .catch(function() {
@@ -264,23 +296,22 @@
                     $('#ajaxloader_image').fadeOut(800);
                     $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
                 });
-            
-            
-        
+
+
+
 				function save() {
-					var editors = tinymce.editors
-					for (var i = 0; i != editors.length; i++) {
-						var editor = editors[i];
-						var textAreaID = editor.id;
-						var content = editor.getContent();
-						var inputID = "input_0".replace("textarea_", "");
+					let editors = tinymce.editors
+					for (let i = 0; i != editors.length; i++) {
+						let editor = editors[i];
+						let textAreaID = editor.id;
+						let content = editor.getContent();
+						let inputID = "input_0".replace("textarea_", "");
 						document.querySelector('.' + inputID).value = content;
 					}
 					return true;
 				}
 			</script>
 
-        </h:form>
 
     </ui:define>
 
