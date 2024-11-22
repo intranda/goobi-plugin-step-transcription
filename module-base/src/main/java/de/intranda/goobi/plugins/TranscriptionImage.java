@@ -13,8 +13,6 @@ public class TranscriptionImage {
     private Image image;
     private String ocrText;
     private Path ocrPath;
-    private boolean hasAlto;
-    private Path altoPath;
 
     public void setOcrText(String text) {
         this.ocrText = text;
