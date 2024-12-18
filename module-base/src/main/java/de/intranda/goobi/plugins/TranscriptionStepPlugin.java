@@ -246,6 +246,23 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
         return this.imageIndex + 1 + "";
     }
 
+
+    public String getHasPreviousPage() {
+        return hasPreviousPage() ? null : "disabled";
+    }
+
+    public String getHasNextPage() {
+        return hasNextPage() ? null : "disabled";
+    }
+
+    public boolean hasPreviousPage() {
+        return getImageIndex() > 0;
+    }
+
+    public boolean hasNextPage() {
+        return getImageIndex() < images.size() - 1;
+    }
+
     public String cmdMoveFirst() {
         setImageIndex(0);
         this.setImageToIndex();
@@ -261,7 +278,7 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     }
 
     public String cmdMoveNext() {
-        if (getImageIndex() != images.size() - 1) {
+        if (hasNextPage()) {
             setImageIndex(getImageIndex() + 1);
             this.setImageToIndex();
         }
@@ -269,10 +286,8 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     }
 
     public String cmdMoveLast() {
-        if (getImageIndex() != images.size() - 1) {
-            setImageIndex(images.size() - 1);
-            this.setImageToIndex();
-        }
+        setImageIndex(images.size() - 1);
+        this.setImageToIndex();
         return "";
     }
 

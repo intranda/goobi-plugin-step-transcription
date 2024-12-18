@@ -34,7 +34,7 @@
 			<button
 				class="btn btn-blank"
 				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
-				disabled="#{cc.attrs.paginator.getHasPreviousPage()}"
+				disabled="#{AktuelleSchritteForm.myPlugin.getHasPreviousPage()}"
 				title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lastImage:msgs.firstImage}"
 				data-bs-toggle="tooltip">
 				<span
@@ -45,6 +45,7 @@
 			<button
 				class="btn btn-primary-400"
 				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMovePrevious}"
+				disabled="#{AktuelleSchritteForm.myPlugin.getHasPreviousPage()}"
 				jsf:id="imageBack">
 				<span
 					aria-hidden="true"
@@ -82,6 +83,7 @@
 			<button
 				class="btn btn-primary-400"
 				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
+				disabled="#{AktuelleSchritteForm.myPlugin.getHasNextPage()}"
 				jsf:id="imageNext">
 				<span>
 					<h:outputText value="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.lw_previousImage:msgs.lw_nextImage} " />
@@ -94,6 +96,7 @@
 			<button
 				class="btn btn-blank"
 				jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveLast}"
+				disabled="#{AktuelleSchritteForm.myPlugin.getHasNextPage()}"
 				jsf:id="navlast"
 				title="#{AktuelleSchritteForm.myPlugin.pagesRTL?msgs.firstImage:msgs.lastImage}">
 				<span
