@@ -76,25 +76,6 @@
 
             <script
                 src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
-            <script>
-				let mytiny = tinymce.init({
-					plugins: 'paste table',
-					selector : '.ocr-text',
-					menubar : '',
-					toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alighnblock | indent outdent | table | pastetext | forecolor backcolor',
-					paste_as_text: true,
-					height : "90vh",
-					init_instance_callback: function (editor) {
-						    editor.on('blur', function (e) {
-						    	save();
-						    });
-						  }
-
-				});
-				mytiny.then(mt => {
-					console.log(mt)
-				})
-			</script>
 
             <section:section type="neutral">
                 <section:header
@@ -105,7 +86,8 @@
                             id="id10"
                             action="#{NavigationForm.Reload}"
                             styleClass="btn d-flex align-items-center btn--title-action"
-                            pt:data-bs-toggle="tooltip">
+                            pt:data-bs-toggle="tooltip"
+                            title="#{msgs.reload}">
                             <span
                                 aria-hidden="true"
                                 class="fa fa-refresh" />
@@ -202,6 +184,9 @@
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
                                 class="input_0"></h:inputText>
+                            <h:inputText
+                                value="#{AktuelleSchritteForm.myPlugin.image.image.url}"
+                                id="inputImageUrl"></h:inputText>
                         </h:panelGroup>
 
                         <h:panelGroup layout="block"
@@ -264,53 +249,90 @@
             </section:section>
 
             <script>
-            let configViewer = {
-                    global: {
-                        divId: 'bigImage',
-                        useTiles: #{AktuelleSchritteForm.myPlugin.useTiles},
-                        footerHeight: 0,
-                        adaptContainerHeight: false,
-                        zoomSlider: "#zoomSlider",
-                        zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-                        zoomSliderLabel: "#zoomSliderLabel input"
-                    },
-                    image: {
-                        mimeType: "image/jpeg",
-                        tileSource: "#{AktuelleSchritteForm.myPlugin.image.image.url}"
+                let useTilesBool = #{AktuelleSchritteForm.myPlugin.useTiles};
+
+                function save() {
+                    let editors = tinymce.editors
+                    for (let i = 0; i != editors.length; i++) {
+                        let editor = editors[i];
+                        let textAreaID = editor.id;
+                        let content = editor.getContent();
+                        let inputID = "input_0".replace("textarea_", "");
+                        document.querySelector('.' + inputID).value = content;
                     }
+                    return true;
+                }
+
+                const showImage = () => {
+                    let imageUrl = document.querySelector('[id$="inputImageUrl"]').value;
+                    let configViewer = {
+                        global: {
+                            divId: 'bigImage',
+                            useTiles: useTilesBool,
+                            footerHeight: 0,
+                            adaptContainerHeight: false,
+                            zoomSlider: "#zoomSlider",
+                            zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
+                            zoomSliderLabel: "#zoomSliderLabel input",
+                        },
+                        image: {
+                            mimeType: "image/jpeg",
+                            tileSource: imageUrl,
+                        },
+                    };
+                    let viewImage = new ImageView.Image( configViewer );
+                    viewImage.load()
+                    .then(function(image) {
+                        image.onFirstTileLoaded()
+                        .then(function() {
+                            $('#ajaxloader_image').fadeOut(800);
+                        })
+                        .catch(function() {
+                            $('#ajaxloader_image').fadeOut(800);
+                        })
+                    })
+                    .catch(function(error){
+                        console.error( 'Error opening image', error );
+                        $('#ajaxloader_image').fadeOut(800);
+                        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+                    });
                 };
 
-                let viewImage = new ImageView.Image( configViewer );
-                viewImage.load()
-                .then(function(image) {
-                    image.onFirstTileLoaded()
-                    .then(function() {
-                        $('#ajaxloader_image').fadeOut(800);
+                const initTinyMCE = () => {
+                    let mytiny = tinymce.init({
+                        plugins: 'table',
+                        selector : '.ocr-text',
+                        menubar : '',
+                        toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alighnblock | indent outdent | table | pastetext | forecolor backcolor',
+                        paste_as_text: true,
+                        height : "90vh",
+                        license_key: 'gpl',
+                        promotion: false,
+                        init_instance_callback: function (editor) {
+                                editor.on('blur', function (e) {
+                                    save();
+                                });
+                            }
+
+                    });
+                    mytiny.then(mt => {
+                        console.log(mt)
                     })
-                    .catch(function() {
-                        $('#ajaxloader_image').fadeOut(800);
-                    })
-                })
-                .catch(function(error){
-                    console.error( 'Error opening image', error );
-                    $('#ajaxloader_image').fadeOut(800);
-                    $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
+                };
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    showImage();
+                    initTinyMCE();
                 });
 
-
-
-				function save() {
-					let editors = tinymce.editors
-					for (let i = 0; i != editors.length; i++) {
-						let editor = editors[i];
-						let textAreaID = editor.id;
-						let content = editor.getContent();
-						let inputID = "input_0".replace("textarea_", "");
-						document.querySelector('.' + inputID).value = content;
-					}
-					return true;
-				}
-			</script>
+                // initialize image viewer and tinyMCE after ajax request
+                jsf.ajax.addOnEvent(function (data) {
+                    if (data.status === 'success') {
+                        showImage();
+                        initTinyMCE();
+                    }
+                });
+            </script>
 
 
     </ui:define>
