@@ -326,7 +326,7 @@
                 });
 
                 // initialize image viewer and tinyMCE after ajax request
-                jsf.ajax.addOnEvent(function (data) {
+                faces.ajax.addOnEvent(function (data) {
                     if (data.status === 'success') {
                         showImage();
                         initTinyMCE();
