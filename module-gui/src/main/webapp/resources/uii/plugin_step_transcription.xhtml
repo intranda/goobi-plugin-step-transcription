@@ -98,7 +98,7 @@
                             title="#{msgs.save}"
                             styleClass="btn d-flex align-items-center btn--title-action"
                             pt:data-bs-toggle="tooltip">
-                            <f:ajax execute="hiddenInputs" render=":myform" />
+                            <f:ajax execute="hiddenInputText" render=":myform" />
                             <span
                                 aria-hidden="true"
                                 class="fa fa-save" />
@@ -183,7 +183,8 @@
                             style="display: none;">
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
-                                class="input_0"></h:inputText>
+                                class="input_0"
+                                id="hiddenInputText"></h:inputText>
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.image.url}"
                                 id="inputImageUrl"></h:inputText>
@@ -222,7 +223,7 @@
                         <span>
                             <h:outputText value="#{msgs.save}" />
                         </span>
-                        <f:ajax execute="hiddenInputs" />
+                        <f:ajax execute="hiddenInputText" render=":myform" />
                     </h:commandLink>
                     <!-- Save and finish the task -->
                     <h:commandLink
