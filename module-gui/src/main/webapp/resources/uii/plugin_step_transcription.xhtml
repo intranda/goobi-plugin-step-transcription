@@ -66,17 +66,17 @@
         <link rel="stylesheet"
             href="plugins/step/intranda_step_transcription/css/style.css"></link>
 
+        <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
 
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/reactiveX/rx.lite.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/q-promises/q.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
+        <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
-            <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
 
-            <script
-                src="plugins/step/intranda_step_transcription/tinymce/tinymce.min.js"></script>
-
+        <h:form id="myform">
             <section:section type="neutral">
                 <section:header
                     icon="puzzle-piece"
@@ -94,12 +94,11 @@
                         </h:commandLink>
                         <h:commandLink
                             id="id10a"
-                            onclick="save()"
                             action="#{AktuelleSchritteForm.myPlugin.saveOcr}"
                             title="#{msgs.save}"
                             styleClass="btn d-flex align-items-center btn--title-action"
                             pt:data-bs-toggle="tooltip">
-                            <f:ajax execute="hiddenInputs" render="" />
+                            <f:ajax execute="hiddenInputText" render=":myform" />
                             <span
                                 aria-hidden="true"
                                 class="fa fa-save" />
@@ -136,7 +135,6 @@
                     </section:header-actions>
                 </section:header>
                 <section:body padding="true">
-                    <h:form id="myform">
                     <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.altoFolderFound}">
                         <div class="row">
                             <div class="col-md-6 col-md-offset-3">
@@ -171,9 +169,11 @@
                                 </div>
                             </div>
                             <div class="col-md-6 transcription-editor-col">
-                                <textarea class="ocr-text" id="textarea_0">
+                                <textarea class="ocr-text visually-hidden" id="textarea_0">
                                     #{AktuelleSchritteForm.myPlugin.image.ocrText}
                                 </textarea>
+                                <div id="editor">
+                                </div>
                             </div>
                         </div>
                         <!--                     </ui:repeat> -->
@@ -183,7 +183,8 @@
                             style="display: none;">
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
-                                class="input_0"></h:inputText>
+                                class="input_0"
+                                id="hiddenInputText"></h:inputText>
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.image.url}"
                                 id="inputImageUrl"></h:inputText>
@@ -195,7 +196,6 @@
                             <h:outputText value="#{msgs.noImagesFound}" />
                         </h:panelGroup>
                     </ui:fragment>
-                    </h:form>
                 </section:body>
                 <section:footer>
                     <h:commandLink
@@ -215,7 +215,7 @@
                     <!-- Save -->
                     <h:commandLink
                         styleClass="btn btn-blank"
-                        id="save" onclick="save()"
+                        id="save"
                         action="#{AktuelleSchritteForm.myPlugin.saveOcr}">
                         <span
                             aria-hidden="true"
@@ -223,10 +223,7 @@
                         <span>
                             <h:outputText value="#{msgs.save}" />
                         </span>
-                        <f:setPropertyActionListener
-                            target="#{NavigationForm.uiStatus.pluginSimulation}"
-                            value="#{false}" />
-                        <f:ajax execute="hiddenInputs" render="" />
+                        <f:ajax execute="hiddenInputText" render=":myform" />
                     </h:commandLink>
                     <!-- Save and finish the task -->
                     <h:commandLink
@@ -247,6 +244,7 @@
                     </h:commandLink>
                 </section:footer>
             </section:section>
+        </h:form>
 
             <script>
                 let useTilesBool = #{AktuelleSchritteForm.myPlugin.useTiles};
@@ -298,38 +296,38 @@
                     });
                 };
 
-                const initTinyMCE = () => {
-                    let mytiny = tinymce.init({
-                        plugins: 'table',
-                        selector : '.ocr-text',
-                        menubar : '',
-                        toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alighnblock | indent outdent | table | pastetext | forecolor backcolor',
-                        paste_as_text: true,
-                        height : "90vh",
-                        license_key: 'gpl',
-                        promotion: false,
-                        init_instance_callback: function (editor) {
-                                editor.on('blur', function (e) {
-                                    save();
-                                });
-                            }
-
+                const initQuill = () => {
+                    let quill = new Quill('#editor', {
+                        modules: {
+                            history: {
+                                delay: 2000,
+                                userOnly: true,
+                            },
+                            toolbar: true,
+                        },
+                        theme: 'snow',
                     });
-                    mytiny.then(mt => {
-                        console.log(mt)
-                    })
+                    const content = document.querySelector('.ocr-text').value;
+                    quill.clipboard.dangerouslyPasteHTML(content);
+                    quill.on('text-change', function(delta, oldDelta, source) {
+                        const updatedContent = quill.getSemanticHTML();
+                        const inputEl = document.querySelector('.input_0');
+                        inputEl.value = updatedContent;
+                        const textArea = document.querySelector('.ocr-text');
+                        textArea.value = updatedContent;
+                    });
                 };
 
                 document.addEventListener('DOMContentLoaded', function() {
                     showImage();
-                    initTinyMCE();
+                    initQuill();
                 });
 
                 // initialize image viewer and tinyMCE after ajax request
-                jsf.ajax.addOnEvent(function (data) {
+                faces.ajax.addOnEvent(function (data) {
                     if (data.status === 'success') {
                         showImage();
-                        initTinyMCE();
+                        initQuill();
                     }
                 });
             </script>
