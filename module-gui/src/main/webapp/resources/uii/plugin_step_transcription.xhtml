@@ -72,8 +72,6 @@
         <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon.min.js"></script>
         <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/openseadragon/openseadragon-viewerinputhook.js"></script>
         <script src="#{HelperForm.applicationWebsiteUrl}/uii/template/js/imageView.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
 
         <h:form id="myform">
@@ -189,6 +187,9 @@
                                 value="#{AktuelleSchritteForm.myPlugin.image.image.url}"
                                 id="inputImageUrl"></h:inputText>
                         </h:panelGroup>
+                        <h:inputHidden
+                            value="#{AktuelleSchritteForm.myPlugin.useTiles}"
+                            id="useTiles" />
 
                         <h:panelGroup layout="block"
                             rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"
@@ -245,94 +246,7 @@
                 </section:footer>
             </section:section>
         </h:form>
-
-            <script>
-                let useTilesBool = #{AktuelleSchritteForm.myPlugin.useTiles};
-
-                function save() {
-                    let editors = tinymce.editors
-                    for (let i = 0; i != editors.length; i++) {
-                        let editor = editors[i];
-                        let textAreaID = editor.id;
-                        let content = editor.getContent();
-                        let inputID = "input_0".replace("textarea_", "");
-                        document.querySelector('.' + inputID).value = content;
-                    }
-                    return true;
-                }
-
-                const showImage = () => {
-                    let imageUrl = document.querySelector('[id$="inputImageUrl"]').value;
-                    let configViewer = {
-                        global: {
-                            divId: 'bigImage',
-                            useTiles: useTilesBool,
-                            footerHeight: 0,
-                            adaptContainerHeight: false,
-                            zoomSlider: "#zoomSlider",
-                            zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-                            zoomSliderLabel: "#zoomSliderLabel input",
-                        },
-                        image: {
-                            mimeType: "image/jpeg",
-                            tileSource: imageUrl,
-                        },
-                    };
-                    let viewImage = new ImageView.Image( configViewer );
-                    viewImage.load()
-                    .then(function(image) {
-                        image.onFirstTileLoaded()
-                        .then(function() {
-                            $('#ajaxloader_image').fadeOut(800);
-                        })
-                        .catch(function() {
-                            $('#ajaxloader_image').fadeOut(800);
-                        })
-                    })
-                    .catch(function(error){
-                        console.error( 'Error opening image', error );
-                        $('#ajaxloader_image').fadeOut(800);
-                        $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
-                    });
-                };
-
-                const initQuill = () => {
-                    let quill = new Quill('#editor', {
-                        modules: {
-                            history: {
-                                delay: 2000,
-                                userOnly: true,
-                            },
-                            toolbar: true,
-                        },
-                        theme: 'snow',
-                    });
-                    const content = document.querySelector('.ocr-text').value;
-                    quill.clipboard.dangerouslyPasteHTML(content);
-                    quill.on('text-change', function(delta, oldDelta, source) {
-                        const updatedContent = quill.getSemanticHTML();
-                        const inputEl = document.querySelector('.input_0');
-                        inputEl.value = updatedContent;
-                        const textArea = document.querySelector('.ocr-text');
-                        textArea.value = updatedContent;
-                    });
-                };
-
-                document.addEventListener('DOMContentLoaded', function() {
-                    showImage();
-                    initQuill();
-                });
-
-                // initialize image viewer and tinyMCE after ajax request
-                faces.ajax.addOnEvent(function (data) {
-                    if (data.status === 'success') {
-                        showImage();
-                        initQuill();
-                    }
-                });
-            </script>
-
-
+        <script src="plugins/step/intranda_step_transcription/js/transcription.js"></script>
     </ui:define>
 
 </ui:composition>

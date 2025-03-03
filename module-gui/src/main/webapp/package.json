@@ -1,0 +1,23 @@
+{
+  "name": "goobi-plugin-step-transcription",
+  "version": "1.0.0",
+  "main": "transcription.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "SEE LICENSE IN LICENSE AT REPO ROOT",
+  "description": "",
+  "dependencies": {
+    "@babel/core": "^7.26.9",
+    "babel-loader": "^10.0.0",
+    "quill": "^2.0.3",
+    "webpack": "^5.98.0"
+  },
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0",
+    "webpack-cli": "^6.0.1"
+  }
+}
