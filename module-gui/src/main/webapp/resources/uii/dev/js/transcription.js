@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // initialize image viewer and tinyMCE after ajax request
-faces.ajax.addOnEvent(function (data) {
+jsf.ajax.addOnEvent(function (data) {
     if (data.status === 'success') {
         showImage();
         initQuill();

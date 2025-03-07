@@ -79,7 +79,7 @@
                 <section:header
                     icon="puzzle-piece"
                     title="#{AktuelleSchritteForm.myPlugin.step.titel}">
-                    <section:header-actions>
+                    <div class="actions section-header-actions">
                         <h:commandLink
                             id="id10"
                             action="#{NavigationForm.Reload}"
@@ -130,7 +130,7 @@
                                 target="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />
                         </h:commandLink>
-                    </section:header-actions>
+                    </div>
                 </section:header>
                 <section:body padding="true">
                     <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.altoFolderFound}">
