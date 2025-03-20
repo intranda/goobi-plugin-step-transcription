@@ -11,6 +11,7 @@ Quill.register({
 export const initQuill = () => {
     let quill = new Quill('#editor', {
         modules: {
+            clipboard: {},
             history: {
                 delay: 2000,
                 userOnly: true,
@@ -20,7 +21,8 @@ export const initQuill = () => {
         theme: 'snow',
     });
     const content = document.querySelector('.ocr-text').value;
-    quill.clipboard.dangerouslyPasteHTML(content);
+    const delta = quill.clipboard.convert({ html: content });
+    quill.setContents(delta, 'silent');
     quill.on('text-change', function(delta, oldDelta, source) {
         const updatedContent = quill.getSemanticHTML();
         const inputEl = document.querySelector('.input_0');
