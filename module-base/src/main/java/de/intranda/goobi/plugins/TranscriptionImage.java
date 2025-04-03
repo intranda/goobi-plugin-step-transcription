@@ -13,8 +13,4 @@ public class TranscriptionImage {
     private Image image;
     private String ocrText;
     private Path ocrPath;
-
-    public void setOcrText(String text) {
-        this.ocrText = text;
-    }
 }
