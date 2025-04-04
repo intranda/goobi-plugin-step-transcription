@@ -30,7 +30,7 @@
 	<composite:implementation>
 		<!-- navigation for big image -->
 		<div class="dataTables__paginator justify-content-center">
-			<f:ajax render="@form">
+			<f:ajax render="@form" >
 				<button
 					class="btn btn-blank"
 					jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveFirst}"
@@ -55,14 +55,16 @@
 				</button>
 			</f:ajax>
 			<div class="dataTables__paginator__page-count">
-				<h:outputText
+				<button
 					id="txtMoveTo1"
-					forceId="false"
-                    value="#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}"
-                    onclick="document.querySelector('[id$=txtMoveTo2]').style.display='inline';
-			       			document.querySelector('[id$=txtMoveTo1]').style.display='none';
+					class="btn btn-link text-black"
+					type="button"
+					onclick="document.querySelector('[id$=txtMoveTo2]').style.display='inline';
+							document.querySelector('[id$=txtMoveTo1]').style.display='none';
 							document.querySelector('[id$=txtMoveTo2]').focus();
-							document.querySelector('[id$=txtMoveTo2]').select();"/>
+							document.querySelector('[id$=txtMoveTo2]').select();">
+					#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}
+				</button>
 				<h:inputText
 					id="txtMoveTo2"
 					forceId="false"
@@ -79,7 +81,7 @@
 					style="display:none">
 				</h:commandButton>
 			</div>
-			<f:ajax render="@form">
+			<f:ajax render="@form" >
 				<button
 					class="btn btn-primary-400"
 					jsf:action="#{AktuelleSchritteForm.myPlugin.cmdMoveNext}"
@@ -103,7 +105,6 @@
 						class="fa fa-angle-double-right"/>
 				</button>
 			</f:ajax>
-
 			<h:commandLink style="display:none;" class="hidden-set-image-button"  action="#{AktuelleSchritteForm.myPlugin.setImageToIndex}"/>
 
 		</div>
