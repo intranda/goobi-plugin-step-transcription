@@ -158,7 +158,6 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
 
         sizeOfImageList = images.size();
         setImageIndex(0);
-        this.setImageToIndex();
     }
 
     public void backupAlto() {
@@ -230,6 +229,7 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
 
     public void setImageIndex(int i) {
         this.imageIndex = i;
+        this.setImageToIndex();
     }
 
     public void setImageMoveTo(String page) {
@@ -265,14 +265,12 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
 
     public String cmdMoveFirst() {
         setImageIndex(0);
-        this.setImageToIndex();
         return "";
     }
 
     public String cmdMovePrevious() {
         if (getImageIndex() != 0) {
             setImageIndex(getImageIndex() - 1);
-            this.setImageToIndex();
         }
         return "";
     }
@@ -280,14 +278,12 @@ public class TranscriptionStepPlugin implements IStepPluginVersion2 {
     public String cmdMoveNext() {
         if (hasNextPage()) {
             setImageIndex(getImageIndex() + 1);
-            this.setImageToIndex();
         }
         return "";
     }
 
     public String cmdMoveLast() {
         setImageIndex(images.size() - 1);
-        this.setImageToIndex();
         return "";
     }
 
