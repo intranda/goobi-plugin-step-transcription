@@ -183,13 +183,15 @@
                                 value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
                                 class="input_0"
                                 id="hiddenInputText"></h:inputText>
-                            <h:inputText
+                            <h:inputHidden
                                 value="#{AktuelleSchritteForm.myPlugin.image.image.url}"
-                                id="inputImageUrl"></h:inputText>
+                                id="inputImageUrl"
+                                disabled="true" />
+                            <h:inputHidden
+                                value="#{AktuelleSchritteForm.myPlugin.useTiles}"
+                                id="useTiles"
+                                disabled="true" />
                         </h:panelGroup>
-                        <h:inputHidden
-                            value="#{AktuelleSchritteForm.myPlugin.useTiles}"
-                            id="useTiles" />
 
                         <h:panelGroup layout="block"
                             rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"
