@@ -40,38 +40,13 @@ After entering the plugin, the user can browse through the image files. A rich t
 
 
 ## Configuration
-The configuration of the plugin is as follows:
+The plugin is configured in the file `plugin_intranda_step_transcription.xml` as shown here:
 
-```xml
-<config_plugin>
-    <!--
-        order of configuration is:
-          1.) project name and step name matches
-          2.) step name matches and project is *
-          3.) project name matches and step name is *
-          4.) project name and step name are *
-    -->
+{{CONFIG_CONTENT}}
 
-    <config>
-        <!-- which projects to use for (can be more then one, otherwise use *) -->
-        <project>*</project>
-        <step>*</step>
+{{CONFIG_DESCRIPTION_PROJECT_STEP}}
 
-        <!-- which folder to use (master|main|jpeg|source|...) -->
-        <imageFolder>master</imageFolder>
-
-        <!-- display button to finish the task directly from within the entered plugin -->
-        <allowTaskFinishButtons>true</allowTaskFinishButtons>
-    </config>
-
-</config_plugin>
-```
-
-The parameters within this configuration file have the following meanings:
-
-| Value | Description |
-| :--- | :--- |
-| `project` | This parameter specifies for which project the current block `<config>` should apply. The name of the project is used here. This parameter can occur several times per `<config>` block. |
-| `step` | This parameter controls for which steps the block `<config>` should apply. The name of the step is used here. This parameter can occur several times per `<config>` block. |
-| `imageFolder` | Specify here from which directory the images are to be displayed. Possible values are e.g. `master`, `media` or individual folders like `photos` and `scans`. |
-| `allowTaskFinishButtons` | This parameter can be used to enable buttons for completing the task to be displayed in the regular plugin interface so that the plugin does not have to be exited first. |
+Parameter               | Explanation
+------------------------|------------------------------------
+`imageFolder`           | Specify here from which directory the images are to be displayed. Possible values are e.g. `master`, `media` or individual folders like `photos` and `scans`.
+`allowTaskFinishButtons` | This parameter can be used to enable buttons for completing the task to be displayed in the regular plugin interface so that the plugin does not have to be exited first.
