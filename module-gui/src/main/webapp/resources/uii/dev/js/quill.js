@@ -68,8 +68,6 @@ export const initQuill = () => {
     // let quill update the input submitting the current state of the text to the backend
     quill.on('text-change', function(delta, oldDelta, source) {
         const updatedContent = quill.getSemanticHTML();
-        const inputEl = document.querySelector('.input_0');
-        inputEl.value = updatedContent;
         const textArea = document.querySelector('.ocr-text');
         textArea.value = updatedContent;
     });
