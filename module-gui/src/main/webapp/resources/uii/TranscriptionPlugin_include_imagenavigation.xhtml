@@ -72,9 +72,9 @@
 					style="display:none;width:30px"
 					required="true"
 					onblur="document.querySelector('[id$=txtMoveTo2]').style.display='none';document.querySelector('[id$=txtMoveTo1]').style.display='inline';"
-					onkeypress="return submitOnEnter(document.querySelector('[id$=cmdMoveTo]').id,event)"/>
+					onkeypress="return submitEnter(document.querySelector('[id$=cmdMoveTo]').id,event)"/>
 				<h:commandButton
-					action="#{NavigationForm.Reload}"
+					action="#{AktuelleSchritteForm.myPlugin.setImageToIndex}"
 					id="cmdMoveTo"
 					forceId="false"
 					value="go"
@@ -109,16 +109,6 @@
 
 		</div>
 		<!-- // navigation for big image -->
-
-        <script>
-        	function clickOnEnter(event, selector) {
-        		console.log(selector);
-    			if(event.key == "Enter") {
-    				event.preventDefault();
-    				document.querySelector(selector).click();
-    			}
-        	}
-        </script>
 
 	</composite:implementation>
 </ui:composition>
