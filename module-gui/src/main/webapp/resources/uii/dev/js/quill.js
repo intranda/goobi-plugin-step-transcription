@@ -69,6 +69,8 @@ export const initQuill = () => {
     quill.on('text-change', function(delta, oldDelta, source) {
         const updatedContent = quill.getSemanticHTML();
         const textArea = document.querySelector('.ocr-text');
+        const input = document.querySelector('.input_0');
+        input.value = updatedContent;
         textArea.value = updatedContent;
     });
     // add custom binding to tab inserting 4 spaces

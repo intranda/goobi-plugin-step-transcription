@@ -54,33 +54,35 @@
 					</span>
 				</button>
 			</f:ajax>
-			<div class="dataTables__paginator__page-count">
-				<button
-					id="txtMoveTo1"
-					class="btn btn-link text-black"
-					type="button"
-					onclick="document.querySelector('[id$=txtMoveTo2]').style.display='inline';
-							document.querySelector('[id$=txtMoveTo1]').style.display='none';
-							document.querySelector('[id$=txtMoveTo2]').focus();
-							document.querySelector('[id$=txtMoveTo2]').select();">
-					#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}
-				</button>
-				<h:inputText
-					id="txtMoveTo2"
-					forceId="false"
-					value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}"
-					style="display:none;width:30px"
-					required="true"
-					onblur="document.querySelector('[id$=txtMoveTo2]').style.display='none';document.querySelector('[id$=txtMoveTo1]').style.display='inline';"
-					onkeypress="return submitEnter(document.querySelector('[id$=cmdMoveTo]').id,event)"/>
-				<h:commandButton
-					action="#{AktuelleSchritteForm.myPlugin.setImageToIndex}"
-					id="cmdMoveTo"
-					forceId="false"
-					value="go"
-					style="display:none">
-				</h:commandButton>
-			</div>
+			<f:ajax
+				render="@form"
+				execute="txtMoveTo2">
+				<div class="dataTables__paginator__page-count">
+					<button
+						id="txtMoveTo1"
+						class="btn btn-link text-black"
+						type="button"
+						onclick="document.querySelector('[id$=txtMoveTo2]').style.display='inline';
+								document.querySelector('[id$=txtMoveTo1]').style.display='none';
+								document.querySelector('[id$=txtMoveTo2]').focus();
+								document.querySelector('[id$=txtMoveTo2]').select();">
+						#{msgs.seite} #{AktuelleSchritteForm.myPlugin.imageIndex +1} #{msgs.von}  #{AktuelleSchritteForm.myPlugin.sizeOfImageList}
+					</button>
+					<h:inputText
+						id="txtMoveTo2"
+						forceId="false"
+						value="#{AktuelleSchritteForm.myPlugin.imageMoveTo}"
+						style="display:none;width:30px"
+						required="true"
+						onblur="document.querySelector('[id$=txtMoveTo2]').style.display='none';document.querySelector('[id$=txtMoveTo1]').style.display='inline';"
+						onkeypress="return submitEnter(document.querySelector('[id$=cmdMoveTo]').id,event)"/>
+					<h:commandButton
+						action="#{NavigationForm.Reload}"
+						id="cmdMoveTo"
+						style="display:none">
+					</h:commandButton>
+				</div>
+			</f:ajax>
 			<f:ajax render="@form" >
 				<button
 					class="btn btn-primary-400"
@@ -105,7 +107,6 @@
 						class="fa fa-angle-double-right"/>
 				</button>
 			</f:ajax>
-			<h:commandLink style="display:none;" class="hidden-set-image-button"  action="#{AktuelleSchritteForm.myPlugin.setImageToIndex}"/>
 
 		</div>
 		<!-- // navigation for big image -->

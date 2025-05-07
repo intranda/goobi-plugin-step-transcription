@@ -94,7 +94,7 @@
                             id="id10a"
                             action="#{AktuelleSchritteForm.myPlugin.saveOcr}"
                             title="#{msgs.save}"
-                            styleClass="btn d-flex align-items-center btn--title-action js-save-button"
+                            styleClass="btn d-flex align-items-center btn--title-action"
                             pt:data-bs-toggle="tooltip">
                             <f:ajax execute="hiddenInputText" render=":myform" />
                             <span
@@ -104,7 +104,7 @@
                         <h:commandLink
                             id="id11"
                             action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}"
-                            styleClass="btn d-flex align-items-center btn--title-action js-save-button"
+                            styleClass="btn d-flex align-items-center btn--title-action"
                             rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                             title="#{msgs.task_leavePluginAndFinishTask}"
                             pt:data-bs-toggle="tooltip">
@@ -166,9 +166,10 @@
                                 </div>
                             </div>
                             <div class="col-md-6 transcription-editor-col">
-                                <textarea class="ocr-text visually-hidden" id="textarea_0">
-                                    #{AktuelleSchritteForm.myPlugin.image.ocrText}
-                                </textarea>
+                                <h:inputTextarea
+                                    id="textarea_0"
+                                    class="ocr-text visually-hidden"
+                                    value="#{AktuelleSchritteForm.myPlugin.image.ocrText}" />
                                 <div id="editor">
                                 </div>
                             </div>
@@ -176,7 +177,7 @@
                         <!--                     </ui:repeat> -->
 
 
-                        <h:panelGroup id="hiddenInputs" class="visually-hidden">
+                        <h:panelGroup id="hiddenInputs" styleClass="visually-hidden">
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
                                 class="input_0"
@@ -215,7 +216,7 @@
                     </h:commandLink>
                     <!-- Save -->
                     <h:commandLink
-                        styleClass="btn btn-blank js-save-button"
+                        styleClass="btn btn-blank"
                         id="save"
                         action="#{AktuelleSchritteForm.myPlugin.saveOcr}">
                         <span
@@ -228,7 +229,7 @@
                     </h:commandLink>
                     <!-- Save and finish the task -->
                     <h:commandLink
-                        styleClass="btn btn-success js-save-button"
+                        styleClass="btn btn-success"
                         id="finishAndClose"
                         rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                         action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}">

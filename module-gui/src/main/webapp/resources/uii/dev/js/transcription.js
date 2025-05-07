@@ -2,23 +2,6 @@ import { initQuill } from "./quill";
 
 let useTilesBool = document.querySelector('[id$="useTiles"]').value === 'true' || false;
 
-const save = () => {
-    const content = document.querySelector('.ocr-text').value;
-    const input = document.querySelector('.input_0');
-    input.value = content;
-};
-
-const addSaveEvent = () => {
-    const saveButtons = document.querySelectorAll('.js-save-button');
-    if (saveButtons) {
-        saveButtons.forEach((button) => {
-            button.addEventListener('click', function() {
-                save();
-            });
-        });
-    }
-};
-
 const showImage = () => {
     let imageUrl = document.querySelector('[id$="inputImageUrl"]').value;
     let configViewer = {
@@ -57,7 +40,6 @@ const showImage = () => {
 const eventListenerActions = () => {
     showImage();
     initQuill();
-    addSaveEvent();
 };
 
 document.addEventListener('DOMContentLoaded', function() {
