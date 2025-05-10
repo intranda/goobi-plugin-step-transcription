@@ -103,7 +103,6 @@
                         </h:commandLink>
                         <h:commandLink
                             id="id11"
-                            onclick="save()"
                             action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}"
                             styleClass="btn d-flex align-items-center btn--title-action"
                             rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
@@ -167,9 +166,10 @@
                                 </div>
                             </div>
                             <div class="col-md-6 transcription-editor-col">
-                                <textarea class="ocr-text visually-hidden" id="textarea_0">
-                                    #{AktuelleSchritteForm.myPlugin.image.ocrText}
-                                </textarea>
+                                <h:inputTextarea
+                                    id="textarea_0"
+                                    class="ocr-text visually-hidden"
+                                    value="#{AktuelleSchritteForm.myPlugin.image.ocrText}" />
                                 <div id="editor">
                                 </div>
                             </div>
@@ -177,19 +177,20 @@
                         <!--                     </ui:repeat> -->
 
 
-                        <h:panelGroup id="hiddenInputs"
-                            style="display: none;">
+                        <h:panelGroup id="hiddenInputs" styleClass="visually-hidden">
                             <h:inputText
                                 value="#{AktuelleSchritteForm.myPlugin.image.ocrText}"
                                 class="input_0"
                                 id="hiddenInputText"></h:inputText>
-                            <h:inputText
+                            <h:inputHidden
                                 value="#{AktuelleSchritteForm.myPlugin.image.image.url}"
-                                id="inputImageUrl"></h:inputText>
+                                id="inputImageUrl"
+                                disabled="true" />
+                            <h:inputHidden
+                                value="#{AktuelleSchritteForm.myPlugin.useTiles}"
+                                id="useTiles"
+                                disabled="true" />
                         </h:panelGroup>
-                        <h:inputHidden
-                            value="#{AktuelleSchritteForm.myPlugin.useTiles}"
-                            id="useTiles" />
 
                         <h:panelGroup layout="block"
                             rendered="#{AktuelleSchritteForm.myPlugin.images.isEmpty()}"

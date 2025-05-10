@@ -1,19 +1,6 @@
-import "quill/dist/quill.snow.css";
 import { initQuill } from "./quill";
 
 let useTilesBool = document.querySelector('[id$="useTiles"]').value === 'true' || false;
-
-function save() {
-    let editors = tinymce.editors
-    for (let i = 0; i != editors.length; i++) {
-        let editor = editors[i];
-        let textAreaID = editor.id;
-        let content = editor.getContent();
-        let inputID = "input_0".replace("textarea_", "");
-        document.querySelector('.' + inputID).value = content;
-    }
-    return true;
-}
 
 const showImage = () => {
     let imageUrl = document.querySelector('[id$="inputImageUrl"]').value;
@@ -50,15 +37,18 @@ const showImage = () => {
     });
 };
 
-document.addEventListener('DOMContentLoaded', function() {
+const eventListenerActions = () => {
     showImage();
     initQuill();
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    eventListenerActions();
 });
 
 // initialize image viewer and tinyMCE after ajax request
 faces.ajax.addOnEvent(function (data) {
     if (data.status === 'success') {
-        showImage();
-        initQuill();
+        eventListenerActions();
     }
 });
