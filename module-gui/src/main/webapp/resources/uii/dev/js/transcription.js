@@ -5,32 +5,17 @@ let useTilesBool = document.querySelector('[id$="useTiles"]').value === 'true' |
 const showImage = () => {
     let imageUrl = document.querySelector('[id$="inputImageUrl"]').value;
     let configViewer = {
-        global: {
-            divId: 'bigImage',
-            useTiles: useTilesBool,
-            footerHeight: 0,
-            adaptContainerHeight: false,
-            zoomSlider: "#zoomSlider",
-            zoomSliderHandle: "#zoomSlider .zoom-slider-handle",
-            zoomSliderLabel: "#zoomSliderLabel input",
-        },
-        image: {
-            mimeType: "image/jpeg",
-            tileSource: imageUrl,
-        },
+        element: "#bigImage",
+        fittingMode: "fixed",
+        useTiles: useTilesBool
     };
     let viewImage = new ImageView.Image( configViewer );
-    viewImage.load()
-    .then(function(image) {
-        image.onFirstTileLoaded()
-        .then(function() {
-            $('#ajaxloader_image').fadeOut(800);
-        })
-        .catch(function() {
-            $('#ajaxloader_image').fadeOut(800);
-        })
+    let zoomControl = new ImageView.Controls.Zoom(viewImage);
+    viewImage.load(imageUrl)
+    .then((image) => {
+        $('#ajaxloader_image').fadeOut(800);
     })
-    .catch(function(error){
+    .catch(() => {
         console.error( 'Error opening image', error );
         $('#ajaxloader_image').fadeOut(800);
         $('#' + configViewer.global.divId).html( 'Failed to load image: "' + error + '"' );
