@@ -3,6 +3,10 @@ title: Transcription of image content
 identifier: intranda_step_transcription
 published: true
 description: This step plugin allows you to create transcriptions of works. The transcriptions are recorded without word or line coordinates.
+keywords:
+    - Goobi workflow
+    - Plugin
+    - Step Plugin
 ---
 ## Introduction
 The transcription plugin allows the user to edit the txt OCR results of a Goobi process. An image and a rich text editor are displayed side by side where the text can be captured.

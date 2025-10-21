@@ -3,6 +3,10 @@ title: Transkription von Bildinhalten
 identifier: intranda_step_transcription
 published: true
 description: Dieses Step-Plugin erlaubt es, Transkriptionen von Werken zu erstellen. Die Transkriptionen werden dabei ohne Wort- oder Zeilenkoordinaten erfasst.
+keywords:
+    - Goobi workflow
+    - Plugin
+    - Step Plugin
 ---
 ## Einführung
 Das Transkriptions-Plugin erlaubt es dem Benutzer, die txt-OCR Ergebnisse eines Goobi-Vorgangs zu bearbeiten. Dabei werden nebeneinander ein Bild und ein Rich-Text-Editor angezeigt, in dem der Text erfasst werden kann.
