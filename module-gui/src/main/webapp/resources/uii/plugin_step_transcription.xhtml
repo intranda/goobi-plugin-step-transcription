@@ -27,7 +27,8 @@
     template="/uii/template/template.html"
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     xmlns:intranda="http://xmlns.jcp.org/jsf/composite/composites"
-    xmlns:section="http://goobi.io/section">
+    xmlns:section="http://goobi.io/section"
+    xmlns:util="http://goobi.io/util">
 
     <ui:param
         name="myPageTitle"
@@ -73,7 +74,7 @@
         <h:form id="myform">
             <section:section type="neutral">
                 <section:header
-                    icon="puzzle-piece"
+                    icon="puzzle"
                     title="#{AktuelleSchritteForm.myPlugin.step.titel}">
                     <section:header-actions>
                         <h:commandLink
@@ -82,9 +83,7 @@
                             styleClass="btn d-flex align-items-center btn--title-action"
                             pt:data-bs-toggle="tooltip"
                             title="#{msgs.reload}">
-                            <span
-                                aria-hidden="true"
-                                class="fa fa-refresh" />
+                            <util:icon icon="refresh" />
                         </h:commandLink>
                         <h:commandLink
                             id="id10a"
@@ -93,9 +92,7 @@
                             styleClass="btn d-flex align-items-center btn--title-action"
                             pt:data-bs-toggle="tooltip">
                             <f:ajax execute="hiddenInputText" render=":myform" />
-                            <span
-                                aria-hidden="true"
-                                class="fa fa-save" />
+                            <util:icon icon="device-floppy" />
                         </h:commandLink>
                         <h:commandLink
                             id="id11"
@@ -104,9 +101,7 @@
                             rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                             title="#{msgs.task_leavePluginAndFinishTask}"
                             pt:data-bs-toggle="tooltip">
-                            <span
-                                aria-hidden="true"
-                                class="fa fa-check" />
+                            <util:icon icon="check" />
                             <f:setPropertyActionListener
                                 target="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />
@@ -118,9 +113,7 @@
                             rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                             title="#{msgs.pluginLeave}"
                             pt:data-bs-toggle="tooltip">
-                            <span
-                                aria-hidden="true"
-                                class="fa fa-close" />
+                            <util:icon icon="x" />
                             <f:setPropertyActionListener
                                 target="#{NavigationForm.uiStatus.pluginSimulation}"
                                 value="#{false}" />
@@ -200,12 +193,7 @@
                         styleClass="btn btn-blank"
                         id="absenden"
                         action="#{AktuelleSchritteForm.myPlugin.cancel}">
-                        <span
-                            aria-hidden="true"
-                            class="fa fa-close" />
-                        <span>
-                            <h:outputText value="#{msgs.pluginLeave}" />
-                        </span>
+                        <util:icon-text icon="x" text="#{msgs.pluginLeave}" />
                         <f:setPropertyActionListener
                             target="#{NavigationForm.uiStatus.pluginSimulation}"
                             value="#{false}" />
@@ -215,12 +203,7 @@
                         styleClass="btn btn-blank"
                         id="save"
                         action="#{AktuelleSchritteForm.myPlugin.saveOcr}">
-                        <span
-                            aria-hidden="true"
-                            class="fa fa-save" />
-                        <span>
-                            <h:outputText value="#{msgs.save}" />
-                        </span>
+                        <util:icon-text icon="device-floppy" text="#{msgs.save}" />
                         <f:ajax execute="hiddenInputText" render=":myform" />
                     </h:commandLink>
                     <!-- Save and finish the task -->
@@ -229,13 +212,7 @@
                         id="finishAndClose"
                         rendered="#{NavigationForm.uiStatus.pluginSimulation != true and AktuelleSchritteForm.myPlugin.allowTaskFinishButtons == true}"
                         action="#{AktuelleSchritteForm.myPlugin.saveAndCloseStep}">
-                        <span
-                            aria-hidden="true"
-                            class="fa fa-check" />
-                        <span>
-                            <h:outputText
-                                value="#{msgs.task_leavePluginAndFinishTask}" />
-                        </span>
+                        <util:icon-text icon="check" text="#{msgs.task_leavePluginAndFinishTask}" />
                         <f:setPropertyActionListener
                             target="#{NavigationForm.uiStatus.pluginSimulation}"
                             value="#{false}" />
