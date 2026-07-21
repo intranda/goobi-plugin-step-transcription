@@ -124,9 +124,7 @@
                     <ui:fragment rendered="#{AktuelleSchritteForm.myPlugin.altoFolderFound}">
                         <div class="row">
                             <div class="col-md-6 col-md-offset-3">
-                                <div class="alert alert-warning">
-                                  <h:outputText escape="false" value="#{msgs.plugin_transcription_warning_alto}" />
-                                </div>
+                                <util:alert type="warning" message="#{msgs.plugin_transcription_warning_alto}" />
                                 <p>#{msgs.plugin_transcription_warning_alto_text1}</p>
                                 <p>#{msgs.plugin_transcription_warning_alto_text2}</p>
                                 <h:commandLink styleClass="btn btn-success" action="#{AktuelleSchritteForm.myPlugin.backupAlto}">#{msgs.plugin_transcription_overwriteExistingOCR}</h:commandLink>
